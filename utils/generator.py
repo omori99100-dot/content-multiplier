@@ -77,7 +77,7 @@ def generate_platform_posts(text: str, platforms: list[str], tone: str = "profes
     tone_instr = TONE_INSTRUCTIONS.get(tone, TONE_INSTRUCTIONS["professional"])
     tone_text = tone_instr.get(language, tone_instr.get("en", ""))
 
-    from .image_fetcher import fetch_image_for_post
+    from utils.image_fetcher import fetch_image_for_post
 
     results = {}
     for platform in platforms:

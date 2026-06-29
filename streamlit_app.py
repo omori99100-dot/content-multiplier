@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+from frontend.fonts import FONT_CSS
 
 st.set_page_config(
     page_title="ContentMultiplier AI - ضاعف محتواك",
@@ -17,10 +18,10 @@ if page_param == "app":
 elif page_param == "privacy":
     st.switch_page("pages/02_🔒_Privacy_Policy.py")
 
+st.markdown(FONT_CSS, unsafe_allow_html=True)
 st.markdown(f"""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap');
-    * {{ font-family: 'Tajawal', sans-serif !important; }}
+    * {{ font-family: 'ShorooqN1', sans-serif !important; }}
     .hero {{ text-align: center; padding: 5rem 1rem 3rem; background: linear-gradient(135deg, #0a1628, #1a3a6a); color: white; border-radius: 0 0 40px 40px; margin: -5rem -1rem 2rem; }}
     .hero h1 {{ font-size: 2.8rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.3; }}
     .hero p {{ font-size: 1.2rem; opacity: 0.85; max-width: 600px; margin: 0 auto 2rem; }}

@@ -1,14 +1,15 @@
 import streamlit as st
+from frontend.fonts import FONT_CSS
 
 st.set_page_config(page_title="Privacy Policy | سياسة الخصوصية", page_icon="🔒", layout="centered", initial_sidebar_state="collapsed")
 
 LANG = st.session_state.get("lang", "ar")
 DIR = "rtl" if LANG == "ar" else "ltr"
 
+st.markdown(FONT_CSS, unsafe_allow_html=True)
 st.markdown(f"""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
-    * {{ font-family: 'Tajawal', sans-serif !important; }}
+    * {{ font-family: 'ShorooqN1', sans-serif !important; }}
     .content {{ direction: {DIR}; text-align: {DIR}; max-width: 800px; margin: auto; padding: 2rem 1rem; line-height: 1.8; }}
     h1 {{ color: #1a3a6a; }}
 </style>

@@ -1,10 +1,17 @@
 import streamlit as st
-import requests
 import os
+from frontend.fonts import FONT_CSS
+
+from backend.database import (
+    init_db, get_daily_usage, get_usage_limit, increment_daily_usage,
+    save_generation, get_generation_history, get_referral_stats,
+)
+from backend.auth import authenticate_user, register_user as backend_register_user
+from utils.generator import generate_platform_posts
+from utils.article_fetcher import fetch_article
 from frontend import translations as t
 
-API_URL = os.getenv("API_URL", "http://localhost:8000")
-BASE_URL = os.getenv("BASE_URL", "http://localhost:8501")
+init_db()
 
 st.set_page_config(page_title="ContentMultiplier AI", page_icon="🚀", layout="wide", initial_sidebar_state="collapsed")
 
@@ -18,10 +25,10 @@ DIR = "rtl" if LANG == "ar" else "ltr"
 def _(key):
     return t._(key, LANG)
 
+st.markdown(FONT_CSS, unsafe_allow_html=True)
 st.markdown(f"""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
-    * {{ font-family: 'Tajawal', sans-serif !important; }}
+    * {{ font-family: 'ShorooqN1', sans-serif !important; }}
     .main-header {{ text-align: center; padding: 1.5rem 0; direction: {DIR}; }}
     .post-card {{ background: #f8f9fa; border-radius: 10px; padding: 1.5rem; margin: 1rem 0; border-{('right' if DIR == 'rtl' else 'left')}: 4px solid #0066cc; direction: {DIR}; text-align: {DIR}; }}
     .platform-badge {{ display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-bottom: 0.5rem; }}
@@ -37,20 +44,6 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
-def api_post(endpoint: str, data: dict):
-    try:
-        r = requests.post(f"{API_URL}{endpoint}", json=data, timeout=60)
-        return r.json() if r.status_code in (200, 201) else {"error": r.json().get("detail", "Request failed")}
-    except requests.exceptions.ConnectionError:
-        return {"error": _("error_connect")}
-
-def api_get(endpoint: str):
-    try:
-        r = requests.get(f"{API_URL}{endpoint}", timeout=15)
-        return r.json() if r.status_code == 200 else {"error": "Request failed"}
-    except requests.exceptions.ConnectionError:
-        return {"error": _("error_connect")}
-
 def switch_lang():
     st.session_state["lang"] = "en" if LANG == "ar" else "ar"
     st.rerun()
@@ -62,13 +55,13 @@ def show_login():
         st.text_input(_("username"), key="login_user")
         st.text_input(_("password"), type="password", key="login_pass")
         if st.form_submit_button(_("login_btn"), type="primary", use_container_width=True):
-            result = api_post("/auth/login", {"username": st.session_state.login_user, "password": st.session_state.login_pass})
-            if result.get("success"):
-                st.session_state["user"] = result["user"]
+            user = authenticate_user(st.session_state.login_user, st.session_state.login_pass)
+            if user:
+                st.session_state["user"] = user
                 st.session_state["page"] = "generate"
                 st.rerun()
             else:
-                st.error(result.get("error", "Login failed"))
+                st.error("Invalid username or password")
     st.markdown("---")
     st.markdown(_("no_account"))
     if st.button(_("create_account_btn"), use_container_width=True):
@@ -88,10 +81,13 @@ def show_register():
         st.text_input(_("email"), key="reg_email")
         st.text_input(_("password"), type="password", key="reg_pass")
         if st.form_submit_button(_("register_btn"), type="primary", use_container_width=True):
-            data = {"username": st.session_state.reg_user, "email": st.session_state.reg_email, "name": st.session_state.reg_name, "password": st.session_state.reg_pass}
-            if ref:
-                data["referral_code"] = ref
-            result = api_post("/auth/register", data)
+            result = backend_register_user(
+                st.session_state.reg_user,
+                st.session_state.reg_email,
+                st.session_state.reg_name,
+                st.session_state.reg_pass,
+                ref,
+            )
             if result.get("success"):
                 st.success("Account created! Please log in.")
                 st.session_state["page"] = "login"
@@ -107,13 +103,13 @@ def show_sidebar():
     with st.sidebar:
         st.markdown(f"### 👋 {_('welcome')}, {user['name']}")
         st.markdown(f"**{_('plan_label')}:** {user['subscription'].upper()}")
-        usage = api_get(f"/user/{user['id']}/usage")
-        if "error" not in usage:
-            used, limit, remaining = usage["used"], usage["limit"], usage["remaining"]
-            pct = min(used / limit * 100, 100) if limit else 0
-            st.markdown(f"**{_('usage_title')}:** {used}/{limit}")
-            st.markdown(f'<div class="usage-bar"><div class="usage-fill" style="width:{pct}%"></div></div>', unsafe_allow_html=True)
-            st.caption(f"{_('remaining')}: {remaining}")
+        used = get_daily_usage(user["id"])
+        limit = get_usage_limit(user["id"])
+        remaining = limit - used
+        pct = min(used / limit * 100, 100) if limit else 0
+        st.markdown(f"**{_('usage_title')}:** {used}/{limit}")
+        st.markdown(f'<div class="usage-bar"><div class="usage-fill" style="width:{pct}%"></div></div>', unsafe_allow_html=True)
+        st.caption(f"{_('remaining')}: {remaining}")
         st.markdown("---")
         if st.button(f"🚀 {_('generate_tab')}", use_container_width=True):
             st.session_state["page"] = "generate"; st.rerun()
@@ -140,16 +136,28 @@ def show_generate():
             tone_options += ["saudi", "egyptian"]
         tone = st.selectbox(_("tone_label"), tone_options, format_func=lambda x: {"professional": _("tone_professional"), "casual": _("tone_casual"), "marketing": _("tone_marketing"), "humorous": _("tone_humorous"), "saudi": _("tone_saudi"), "egyptian": _("tone_egyptian")}.get(x, x))
         platforms = st.multiselect(_("platforms_label"), ["twitter", "linkedin", "facebook", "instagram", "tiktok"], default=["twitter", "linkedin", "facebook"])
-        send_email = st.checkbox("📧 " + ("Send to my email" if LANG == "en" else "أرسل إلى بريدي"), value=True)
         if st.button(f"🚀 {_('generate_btn')}", type="primary", use_container_width=True):
             if url:
-                with st.spinner(_("generating")):
-                    result = api_post("/generate", {"url": url, "tone": tone, "platforms": platforms, "user_id": st.session_state["user"]["id"], "language": LANG, "send_email": send_email})
-                    if "error" in result: st.error(result["error"])
-                    else:
-                        st.session_state["results"] = result.get("posts")
-                        st.session_state["source_title"] = result.get("source_title", "")
-                        st.success(_("success")); st.rerun()
+                user = st.session_state["user"]
+                used = get_daily_usage(user["id"])
+                limit = get_usage_limit(user["id"])
+                if used >= limit:
+                    st.error(f"Daily limit reached ({limit}). Upgrade your plan for more.")
+                else:
+                    with st.spinner(_("generating")):
+                        article = fetch_article(url)
+                        if not article:
+                            st.error("Could not fetch article content")
+                        else:
+                            source_text = article["text"]
+                            source_title = article["title"]
+                            posts = generate_platform_posts(source_text, platforms, tone, LANG)
+                            increment_daily_usage(user["id"])
+                            for platform, data in posts.items():
+                                save_generation(user["id"], url, source_text[:500], source_title, platform, data["text"], tone, data.get("image_url"))
+                            st.session_state["results"] = posts
+                            st.session_state["source_title"] = source_title
+                            st.success(_("success")); st.rerun()
             else: st.warning(_("enter_url"))
 
     with tab2:
@@ -158,15 +166,21 @@ def show_generate():
         if LANG == "ar": tone2_options += ["saudi", "egyptian"]
         tone2 = st.selectbox(_("tone_label"), tone2_options, key="tone2", format_func=lambda x: {"professional": _("tone_professional"), "casual": _("tone_casual"), "marketing": _("tone_marketing"), "humorous": _("tone_humorous"), "saudi": _("tone_saudi"), "egyptian": _("tone_egyptian")}.get(x, x))
         platforms2 = st.multiselect(_("platforms_label"), ["twitter", "linkedin", "facebook", "instagram", "tiktok"], default=["twitter", "linkedin", "facebook"], key="platforms2")
-        send_email2 = st.checkbox("📧 " + ("Send to my email" if LANG == "en" else "أرسل إلى بريدي"), value=True, key="send2")
         if st.button(f"🚀 {_('generate_btn')}", type="primary", use_container_width=True, key="btn2"):
             if input_text and len(input_text.strip()) > 20:
-                with st.spinner(_("generating")):
-                    result = api_post("/generate", {"text": input_text, "tone": tone2, "platforms": platforms2, "user_id": st.session_state["user"]["id"], "language": LANG, "send_email": send_email2})
-                    if "error" in result: st.error(result["error"])
-                    else:
-                        st.session_state["results"] = result.get("posts")
-                        st.session_state["source_title"] = result.get("source_title", "Custom Text")
+                user = st.session_state["user"]
+                used = get_daily_usage(user["id"])
+                limit = get_usage_limit(user["id"])
+                if used >= limit:
+                    st.error(f"Daily limit reached ({limit}). Upgrade your plan for more.")
+                else:
+                    with st.spinner(_("generating")):
+                        posts = generate_platform_posts(input_text, platforms2, tone2, LANG)
+                        increment_daily_usage(user["id"])
+                        for platform, data in posts.items():
+                            save_generation(user["id"], "", input_text[:500], "Custom Text", platform, data["text"], tone2, data.get("image_url"))
+                        st.session_state["results"] = posts
+                        st.session_state["source_title"] = "Custom Text"
                         st.success(_("success")); st.rerun()
             else: st.warning(_("enter_text"))
 
@@ -185,23 +199,23 @@ def show_generate():
             st.markdown(text)
             if st.button(f"📋 {_('copy_btn')}", key=f"copy_{platform}"): st.code(text, language="text")
             st.markdown('</div>', unsafe_allow_html=True)
-        st.info("📧 " + (f"Email will be sent to {st.session_state['user']['email']}" if LANG == "en" else f"سيتم إرسال الإيميل إلى {st.session_state['user']['email']}"))
         if st.button(f"🔄 {_('clear_results')}"): st.session_state["results"] = None; st.rerun()
 
 def show_dashboard():
     show_sidebar()
     st.markdown(f"## 📊 {_('your_dashboard')}")
     user = st.session_state["user"]
-    usage = api_get(f"/user/{user['id']}/usage")
-    if "error" not in usage:
-        col1, col2, col3 = st.columns(3)
-        col1.metric(_("used_today"), usage["used"])
-        col2.metric(_("daily_limit"), usage["limit"])
-        col3.metric(_("remaining"), usage["remaining"])
+    used = get_daily_usage(user["id"])
+    limit = get_usage_limit(user["id"])
+    remaining = limit - used
+    col1, col2, col3 = st.columns(3)
+    col1.metric(_("used_today"), used)
+    col2.metric(_("daily_limit"), limit)
+    col3.metric(_("remaining"), remaining)
     st.markdown(f"### 📜 {_('generation_history')}")
-    history = api_get(f"/user/{user['id']}/history")
-    if "error" not in history and history.get("history"):
-        for gen in history["history"]:
+    history = get_generation_history(user["id"])
+    if history:
+        for gen in history:
             label = f"{gen['created_at'][:16]} - {gen['platform'].upper()}"
             if gen.get('source_title'): label += f" - {gen['source_title'][:50]}"
             with st.expander(label):
@@ -215,27 +229,25 @@ def show_referral():
     show_sidebar()
     st.markdown("## 🔗 " + ("Referral Program" if LANG == "en" else "برنامج الإحالات"))
     user = st.session_state["user"]
-    ref = api_get(f"/user/{user['id']}/referral")
-    if "error" not in ref:
-        code = ref.get("code", "")
-        link = f"{BASE_URL}/?ref={code}"
-        st.markdown(f"### {'Your Referral Link' if LANG == 'en' else 'رابط الإحالة الخاص بك'}")
-        st.code(link, language="text")
-        if st.button("📋 " + ("Copy Link" if LANG == "en" else "نسخ الرابط")):
-            st.write("Copied!")
-        col1, col2 = st.columns(2)
-        col1.metric("👥 " + ("People Invited" if LANG == "en" else "عدد المدعوين"), ref.get("count", 0))
-        col2.metric("🎁 " + ("Bonuses Earned" if LANG == "en" else "المكافآت"), ref.get("bonuses", 0))
-        st.markdown("---")
-        st.markdown("### 💡 " + ("How it works" if LANG == "en" else "كيف يعمل؟"))
-        steps = [
-            ("1️⃣ " + ("Share your link" if LANG == "en" else "شارك رابطك"), "You invite a friend" if LANG == "en" else "ترسل الرابط لصديق"),
-            ("2️⃣ " + ("They subscribe" if LANG == "en" else "يشترك صديقك"), "They sign up & subscribe to any plan" if LANG == "en" else "يسجل ويشترك بأي باقة"),
-            ("3️⃣ " + ("You get a free month!" if LANG == "en" else "تحصل على شهر مجاني!"), "We extend your subscription by 30 days" if LANG == "en" else "نمدد اشتراكك 30 يوماً"),
-        ]
-        for title, desc in steps:
-            st.markdown(f"**{title}**")
-            st.markdown(f"<p style='color:#666;margin:-0.5rem 0 1rem 1.5rem;'>{desc}</p>", unsafe_allow_html=True)
+    ref = get_referral_stats(user["id"])
+    code = ref.get("code", "")
+    st.markdown(f"### {'Your Referral Link' if LANG == 'en' else 'رابط الإحالة الخاص بك'}")
+    st.code(code, language="text")
+    if st.button("📋 " + ("Copy Link" if LANG == "en" else "نسخ الرابط")):
+        st.write("Copied!")
+    col1, col2 = st.columns(2)
+    col1.metric("👥 " + ("People Invited" if LANG == "en" else "عدد المدعوين"), ref.get("count", 0))
+    col2.metric("🎁 " + ("Bonuses Earned" if LANG == "en" else "المكافآت"), ref.get("bonuses", 0))
+    st.markdown("---")
+    st.markdown("### 💡 " + ("How it works" if LANG == "en" else "كيف يعمل؟"))
+    steps = [
+        ("1️⃣ " + ("Share your link" if LANG == "en" else "شارك رابطك"), "You invite a friend" if LANG == "en" else "ترسل الرابط لصديق"),
+        ("2️⃣ " + ("They subscribe" if LANG == "en" else "يشترك صديقك"), "They sign up & subscribe to any plan" if LANG == "en" else "يسجل ويشترك بأي باقة"),
+        ("3️⃣ " + ("You get a free month!" if LANG == "en" else "تحصل على شهر مجاني!"), "We extend your subscription by 30 days" if LANG == "en" else "نمدد اشتراكك 30 يوماً"),
+    ]
+    for title, desc in steps:
+        st.markdown(f"**{title}**")
+        st.markdown(f"<p style='color:#666;margin:-0.5rem 0 1rem 1.5rem;'>{desc}</p>", unsafe_allow_html=True)
 
 def show_pricing():
     show_sidebar()
@@ -249,10 +261,11 @@ def show_pricing():
             for line in desc.split("\n"): st.markdown(f"- {line}")
             if user["subscription"] == key: st.button(f"✅ {_('active')}", disabled=True, use_container_width=True)
             elif key != "free":
-                if st.button(_("subscribe_basic") if key == "basic" else _("subscribe_pro"), type="primary", use_container_width=True):
-                    result = api_post("/create-checkout-session", {"user_id": user["id"], "plan": key})
-                    if "error" in result: st.error(result["error"])
-                    else: st.markdown(f"[{'Pay' if LANG == 'en' else 'الدفع'}]({result['url']})")
+                stripe_key = os.getenv("STRIPE_SECRET_KEY")
+                if stripe_key:
+                    st.button(_("subscribe_basic") if key == "basic" else _("subscribe_pro"), type="primary", use_container_width=True)
+                else:
+                    st.info("💬 " + ("Contact us to upgrade" if LANG == "en" else "تواصل معنا للترقية"))
 
 def main():
     checkout = st.query_params.get("checkout")
@@ -264,7 +277,7 @@ def main():
         st.session_state["ref_code"] = ref
 
     if st.session_state["user"] is None:
-        st.markdown(f'<div style="text-align:center;padding:3rem;"><h1>🚀 {_("app_title")}</h1><p>{_("app_subtitle")}</p><a href="{BASE_URL}" target="_self" style="display:inline-block;padding:1rem 3rem;background:#0066cc;color:white;border-radius:50px;text-decoration:none;font-size:1.2rem;font-weight:bold;">{"Home" if LANG == "en" else "الصفحة الرئيسية"}</a></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="text-align:center;padding:3rem;"><h1>🚀 {_("app_title")}</h1><p>{_("app_subtitle")}</p><a href="?page=landing" target="_self" style="display:inline-block;padding:1rem 3rem;background:#0066cc;color:white;border-radius:50px;text-decoration:none;font-size:1.2rem;font-weight:bold;">{"Home" if LANG == "en" else "الصفحة الرئيسية"}</a></div>', unsafe_allow_html=True)
         col1, col2 = st.columns(2)
         with col1: show_login()
         with col2:
@@ -278,5 +291,4 @@ def main():
     elif st.session_state["page"] == "referral": show_referral()
     else: show_generate()
 
-if __name__ == "__main__":
-    main()
+main()
