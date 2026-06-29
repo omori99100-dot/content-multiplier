@@ -1,5 +1,5 @@
 requests==2.31.0
-beautifulsoup4==4.12.2
+trafilatura>=2.0.0
 openai>=1.6.1
 python-dotenv==1.0.0
 streamlit>=1.40.0
