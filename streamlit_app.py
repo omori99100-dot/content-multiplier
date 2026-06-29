@@ -170,33 +170,6 @@ for i, (col, (icon, name, price, feats, featured)) in enumerate(zip(pcols, plans
 
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 
-testi_title = "💬 ماذا يقول مستخدمونا" if LANG == "ar" else "💬 What Our Users Say"
-st.markdown(f'<h2 style="text-align:center;font-size:2rem;font-weight:800;margin-bottom:3rem;">{testi_title}</h2>', unsafe_allow_html=True)
-
-testimonials = [
-    ("👩‍💼", "سارة أحمد" if LANG == "ar" else "Sara Ahmed", "مديرة تسويق رقمي" if LANG == "ar" else "Digital Marketing Manager",
-     "كانت إعادة صياغة المحتوى تأخذ مني 3 ساعات يومياً. الآن أصبحت دقيقة واحدة. أداة رائعة!" if LANG == "ar"
-     else "Content repurposing used to take me 3 hours daily. Now it takes 1 minute. Amazing tool!"),
-    ("👨‍💻", "فيصل العتيبي" if LANG == "ar" else "Faisal Al-Otaibi", "صانع محتوى" if LANG == "ar" else "Content Creator",
-     "دعم اللهجة السعودية شيء خرافي! أخيراً أداة تفهم السوق العربي وتعرف تكتب زي الناس." if LANG == "ar"
-     else "Saudi dialect support is incredible! Finally a tool that understands the Arab market."),
-    ("👨‍💼", "محمد الغامدي" if LANG == "ar" else "Mohammed Al-Ghamdi", "مستشار تسويق" if LANG == "ar" else "Marketing Consultant",
-     "أوفر 5 ساعات أسبوعياً وأنشر على 5 منصات في نفس الوقت. أفضل استثمار لأداة تسويقية." if LANG == "ar"
-     else "I save 5 hours weekly and post to 5 platforms simultaneously. Best marketing investment."),
-]
-
-tcols = st.columns(3)
-for col, (avatar, name, role, text) in zip(tcols, testimonials):
-    with col:
-        st.markdown(f'<div class="glass-card" style="text-align:center;">'
-            f'<div class="avatar-circle">{avatar}</div>'
-            f'<p style="font-style:italic;opacity:0.85;line-height:1.7;margin-bottom:1.5rem;">"{text}"</p>'
-            f'<div style="font-weight:700;font-size:1.1rem;">{name}</div>'
-            f'<div style="opacity:0.6;font-size:0.9rem;">{role}</div>'
-            f'</div>', unsafe_allow_html=True)
-
-st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
-
 st.markdown(f'''
 <div style="text-align:center;padding:3rem 1rem;border-top:1px solid rgba(255,255,255,0.1);">
     <div style="margin-bottom:1rem;font-weight:700;font-size:1.2rem;">🚀 ContentMultiplier AI</div>
@@ -205,10 +178,6 @@ st.markdown(f'''
         <a href="?page=privacy" target="_self">{"سياسة الخصوصية" if LANG == "ar" else "Privacy Policy"}</a>
         <a href="?page=privacy" target="_self">{"الشروط والأحكام" if LANG == "ar" else "Terms & Conditions"}</a>
         <a href="mailto:hello@contentmultiplier.app">{"تواصل معنا" if LANG == "ar" else "Contact Us"}</a>
-    </div>
-    <div style="opacity:0.5;font-size:0.85rem;">
-        {"بُنِيَ باستخدام" if LANG == "ar" else "Built with"} ❤️
-        <a href="https://opencode.ai" target="_blank" style="opacity:0.8!important;">OpenCode</a> + DeepSeek AI
     </div>
     <div style="opacity:0.4;font-size:0.8rem;margin-top:0.5rem;">
         © 2026 ContentMultiplier AI. {"جميع الحقوق محفوظة." if LANG == "ar" else "All rights reserved."}

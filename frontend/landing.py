@@ -167,36 +167,6 @@ with pcol3:
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown('<div class="section-title">💬 ماذا يقول مستخدمونا</div>', unsafe_allow_html=True)
-tcol1, tcol2, tcol3 = st.columns(3)
-with tcol1:
-    st.markdown("""
-    <div class="testimonial-card">
-        <div class="avatar">👩‍💼</div>
-        <div class="text">"كانت إعادة صياغة المحتوى تأخذ مني 3 ساعات يومياً. الآن أصبحت دقيقة واحدة. أداة رائعة!"</div>
-        <div class="name">سارة أحمد</div>
-        <div style="color:#888;font-size:0.85rem;">مديرة تسويق رقمي</div>
-    </div>
-    """, unsafe_allow_html=True)
-with tcol2:
-    st.markdown("""
-    <div class="testimonial-card">
-        <div class="avatar">👨‍💻</div>
-        <div class="text">"دعم اللهجة السعودية شيء خرافي! أخيراً أداة تفهم السوق العربي وتعرف تكتب زي الناس."</div>
-        <div class="name">فيصل العتيبي</div>
-        <div style="color:#888;font-size:0.85rem;">صانع محتوى</div>
-    </div>
-    """, unsafe_allow_html=True)
-with tcol3:
-    st.markdown("""
-    <div class="testimonial-card">
-        <div class="avatar">👨‍💼</div>
-        <div class="text">"أوفر 5 ساعات أسبوعياً وأنشر على 5 منصات في نفس الوقت. أفضل استثمار لأداة تسويقية."</div>
-        <div class="name">محمد الغامدي</div>
-        <div style="color:#888;font-size:0.85rem;">مستشار تسويق</div>
-    </div>
-    """, unsafe_allow_html=True)
-
 st.markdown("""
 <div class="footer">
     <div style="margin-bottom:1rem;">
