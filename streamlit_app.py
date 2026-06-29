@@ -11,6 +11,12 @@ st.set_page_config(
 LANG = st.session_state.get("lang", "ar")
 DIR = "rtl" if LANG == "ar" else "ltr"
 
+page_param = st.query_params.get("page")
+if page_param == "app":
+    st.switch_page("pages/01_📱_App.py")
+elif page_param == "privacy":
+    st.switch_page("pages/02_🔒_Privacy_Policy.py")
+
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap');
@@ -50,8 +56,6 @@ col1, _, col2 = st.columns([1, 8, 1])
 with col2:
     st.button("🌐 " + ("English" if LANG == "ar" else "العربية"), on_click=switch_lang)
 
-APP_URL = "http://localhost:8501"
-
 hero_title_ar = "🚀 ضاعف محتواك لمنصات التواصل<br>في دقائق بالذكاء الاصطناعي"
 hero_title_en = "🚀 Multiply Your Content Across<br>Social Platforms in Minutes"
 
@@ -70,8 +74,8 @@ st.markdown(f"""
     <h1>{hero_title}</h1>
     <p>{hero_desc}</p>
     <div>
-        <a href="{APP_URL}" class="btn-primary">{cta_main} ✨</a>
-        <a href="{APP_URL}" class="btn-secondary">{cta_login} 🔐</a>
+        <a href="?page=app" class="btn-primary">{cta_main} ✨</a>
+        <a href="?page=app" class="btn-secondary">{cta_login} 🔐</a>
     </div>
     <br>
     <div style="display:flex; justify-content:center; gap:2rem; flex-wrap:wrap; margin-top:2rem;">
@@ -126,7 +130,7 @@ for col, (icon, name, badge, price, features_list) in zip([pcol1, pcol2, pcol3],
         btn_text = "ابدأ مجاناً" if LANG == "ar" else "Start Free"
         if name not in ("مجاني" if LANG == "ar" else "Free",):
             btn_text = f"اشترك {price}/شهر" if LANG == "ar" else f"Subscribe {price}/mo"
-        st.markdown(f'<a href="{APP_URL}" class="btn-primary" style="display:block;text-align:center;">{btn_text}</a>', unsafe_allow_html=True)
+        st.markdown(f'<a href="?page=app" class="btn-primary" style="display:block;text-align:center;">{btn_text}</a>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
 testimonials_title = "💬 ماذا يقول مستخدمونا" if LANG == "ar" else "💬 What Our Users Say"
@@ -152,8 +156,8 @@ st.markdown(f"""
         <strong>🚀 ContentMultiplier AI</strong> — {"ضاعف محتواك لمنصات التواصل" if LANG == "ar" else "Multiply your content across social platforms"}
     </div>
     <div>
-        <a href="/privacy" target="_self">{"سياسة الخصوصية" if LANG == "ar" else "Privacy Policy"}</a>
-        <a href="/privacy" target="_self">{"الشروط والأحكام" if LANG == "ar" else "Terms"}</a>
+        <a href="?page=privacy" target="_self">{"سياسة الخصوصية" if LANG == "ar" else "Privacy Policy"}</a>
+        <a href="?page=privacy" target="_self">{"الشروط والأحكام" if LANG == "ar" else "Terms"}</a>
         <a href="mailto:hello@contentmultiplier.app">{"تواصل معنا" if LANG == "ar" else "Contact"}</a>
     </div>
     <div style="margin-top:0.5rem;">
