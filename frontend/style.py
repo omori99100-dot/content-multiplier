@@ -13,6 +13,19 @@ def inject_custom_css():
         background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
     }
 
+
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(16px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
+        50% { box-shadow: 0 4px 30px rgba(37, 99, 235, 0.6); }
+    }
+
+    .glass-card {
+        animation: fadeIn 0.6s ease-out both;
+    }
     .glass-card {
         background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(16px);
@@ -25,7 +38,7 @@ def inject_custom_css():
     }
 
     .glass-card:hover {
-        transform: translateY(-2px);
+        transform: translateY(-4px) scale(1.01);
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
     }
 
@@ -58,6 +71,10 @@ def inject_custom_css():
 
     .stButton > button:active {
         transform: translateY(0) !important;
+    }
+
+    .stButton > button[kind="primary"] {
+        animation: pulse 2s infinite;
     }
 
     .stTextInput > div > div > input,
