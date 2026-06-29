@@ -149,5 +149,53 @@ def inject_custom_css():
         color: rgba(255, 255, 255, 0.65);
         margin-bottom: 2rem;
     }
+    @media (prefers-color-scheme: light) {
+        .stApp {
+            background: linear-gradient(135deg, #EEF2FF 0%, #C7D2FE 100%);
+        }
+        h1, h2, h3, h4, h5, h6 { color: #1E293B !important; }
+        p, li, span, div { color: #334155; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        }
+        .glass-card h1, .glass-card h2, .glass-card h3,
+        .glass-card h4, .glass-card p, .glass-card label,
+        .glass-card span, .glass-card div:not(.glass-card) {
+            color: #1E293B;
+        }
+        .stTextInput > div > div > input,
+        .stTextArea > div > div > textarea,
+        .stSelectbox > div > div > select,
+        .stSelectbox > div > div {
+            background: #fff !important;
+            border: 1px solid #CBD5E1 !important;
+            color: #1E293B !important;
+        }
+        .stTextInput label, .stTextArea label, .stSelectbox label {
+            color: #475569 !important;
+        }
+        a { color: #2563EB !important; }
+        a:hover { color: #1D4ED8 !important; }
+        .stAlert {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid #CBD5E1 !important;
+        }
+        .stAlert > div { color: #1E293B !important; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.25); }
+        .main-header {
+            background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sub-header { color: rgba(0, 0, 0, 0.5); }
+        .stMetric { background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.06); }
+        .stMetric label { color: #64748B !important; }
+        .stMetric [data-testid='stMetricValue'] { color: #1E293B !important; }
+    }
 </style>
 """, unsafe_allow_html=True)
