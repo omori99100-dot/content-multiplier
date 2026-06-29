@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+database.db
+*.db
+dist/
+build/
+*.egg-info/
+.Streamlit/
+config.yaml
+__pycache__/

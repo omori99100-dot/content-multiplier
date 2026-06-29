@@ -1,0 +1,8 @@
+[build]
+  command = "pip install -r requirements.txt"
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "https://contentmultiplier.streamlit.app"
+  status = 200
