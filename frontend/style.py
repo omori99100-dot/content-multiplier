@@ -214,5 +214,32 @@ def inject_custom_css():
         .stMetric label { color: #64748B !important; }
         .stMetric [data-testid='stMetricValue'] { color: #1E293B !important; }
     }
+
+    @media (max-width: 768px) {
+        .glass-card { padding: 1.25rem; border-radius: 16px; }
+        .main-header { font-size: 1.8rem !important; }
+        .sub-header { font-size: 0.95rem !important; }
+        .stButton > button {
+            padding: 0.85rem 1.5rem !important;
+            font-size: 1.05rem !important;
+            width: 100% !important;
+        }
+        .stTextInput > div > div > input,
+        .stTextArea > div > div > textarea {
+            font-size: 16px !important;
+        }
+        h1 { font-size: 1.6rem !important; }
+        h2 { font-size: 1.3rem !important; }
+        h3 { font-size: 1.1rem !important; }
+        .topbar { padding: 0.75rem 1rem !important; gap: 0.5rem !important; }
+        .topbar > div:first-child { gap: 0.5rem !important; }
+        .topbar .avatar-circle-sm { width: 32px; height: 32px; font-size: 0.9rem; }
+        .platform-pill { padding: 0.5rem 1rem; font-size: 0.85rem; }
+        .stMetric { padding: 0.75rem; }
+        .stTabs [data-baseweb="tab"] { padding: 0.4rem 1rem !important; font-size: 0.85rem !important; }
+        .result-card { padding: 1rem; }
+        .section-spacer { height: 2.5rem; }
+    }
+
 </style>
 """, unsafe_allow_html=True)
