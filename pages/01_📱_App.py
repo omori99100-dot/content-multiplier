@@ -15,9 +15,13 @@ init_db()
 
 st.set_page_config(page_title="ContentMultiplier AI", page_icon="🚀", layout="wide", initial_sidebar_state="collapsed")
 
-for k in ("user", "page", "results", "ref_code"):
-    st.session_state.setdefault(k, None if k != "page" else "home")
-st.session_state.setdefault("lang", "ar")
+for k in ("user", "results", "ref_code"):
+    if k not in st.session_state:
+        st.session_state[k] = None
+if "page" not in st.session_state:
+    st.session_state["page"] = "home"
+if "lang" not in st.session_state:
+    st.session_state["lang"] = "ar"
 
 LANG = st.session_state["lang"]
 
@@ -151,10 +155,12 @@ def show_topbar(user):
         </div>
         <div style="display:flex;align-items:center;gap:1rem;">
             {plan_badge}
-            <span style="opacity:0.5;cursor:pointer;font-size:0.9rem;" onclick="alert('lang')">🌐</span>
         </div>
     </div>
     ''', unsafe_allow_html=True)
+    if st.button("🌐", key="lang_topbar", help="English" if LANG == "ar" else "العربية"):
+        st.session_state["lang"] = "en" if LANG == "ar" else "ar"
+        st.rerun()
 
 def show_nav():
     pages = [
@@ -163,10 +169,13 @@ def show_nav():
         ("💎", _("upgrade_tab"), "pricing"),
         ("🔗", "Referrals" if LANG == "en" else "الإحالات", "referral"),
     ]
-    st.markdown(f'<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;">', unsafe_allow_html=True)
-    for icon, label, key in pages:
-        active = "active" if st.session_state["page"] == key else ""
-        st.markdown(f'<a href="?page={key}" class="platform-pill {active}" style="text-decoration:none!important;">{icon} {label}</a>', unsafe_allow_html=True)
+    navcols = st.columns(len(pages))
+    for i, (col, (icon, label, key)) in enumerate(zip(navcols, pages)):
+        with col:
+            if st.button(f"{icon} {label}", key=f"nav_{key}", use_container_width=True,
+                         type="primary" if st.session_state["page"] == key else "secondary"):
+                st.session_state["page"] = key
+                st.rerun()
 
 def show_generate():
     user = st.session_state["user"]

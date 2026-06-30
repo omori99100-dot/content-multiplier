@@ -2,6 +2,7 @@ import streamlit as st
 from frontend.fonts import FONT_CSS
 from frontend.style import inject_custom_css
 
+# Page configuration — must be first Streamlit command
 st.set_page_config(
     page_title="ContentMultiplier AI - ضاعف محتواك",
     page_icon="🚀",
@@ -10,7 +11,6 @@ st.set_page_config(
 )
 
 LANG = st.session_state.get("lang", "ar")
-DIR = "rtl" if LANG == "ar" else "ltr"
 
 page_param = st.query_params.get("page")
 if page_param == "app":
@@ -21,6 +21,7 @@ elif page_param == "privacy":
 st.markdown(FONT_CSS, unsafe_allow_html=True)
 inject_custom_css()
 
+# ── Language switcher ──────────────────────────────────────────────────────
 def switch_lang():
     st.session_state["lang"] = "en" if LANG == "ar" else "ar"
     st.rerun()
@@ -30,10 +31,6 @@ hero_anim = """
     @keyframes fadeSlideUp {
         0% { opacity: 0; transform: translateY(30px); }
         100% { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-        0%, 100% { box-shadow: 0 4px 30px rgba(37, 99, 235, 0.3); }
-        50% { box-shadow: 0 4px 50px rgba(37, 99, 235, 0.6); }
     }
     .hero-section { text-align: center; padding: 6rem 1rem 4rem; animation: fadeSlideUp 0.8s ease-out; }
     .hero-section h1 { animation: fadeSlideUp 0.8s ease-out 0.1s both; }
@@ -66,6 +63,7 @@ hero_anim = """
 """
 st.markdown(hero_anim, unsafe_allow_html=True)
 
+# ── Hero section ───────────────────────────────────────────────────────────
 col1, _, col2 = st.columns([1, 8, 1])
 with col2:
     st.button("🌐 " + ("English" if LANG == "ar" else "العربية"), on_click=switch_lang, use_container_width=True)
@@ -100,6 +98,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 
+# ── Features section ───────────────────────────────────────────────────────
 features_title = "✨ لماذا مضاعف المحتوى؟" if LANG == "ar" else "✨ Why ContentMultiplier?"
 st.markdown(f'<h2 style="text-align:center;font-size:2rem;font-weight:800;margin-bottom:3rem;">{features_title}</h2>', unsafe_allow_html=True)
 
@@ -127,6 +126,7 @@ for i, (col, (icon, title, desc)) in enumerate(zip(cols, features)):
 
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 
+# ── Pricing section ────────────────────────────────────────────────────────
 pricing_title = "💰 خطط الأسعار" if LANG == "ar" else "💰 Pricing Plans"
 st.markdown(f'<h2 style="text-align:center;font-size:2rem;font-weight:800;margin-bottom:3rem;">{pricing_title}</h2>', unsafe_allow_html=True)
 
@@ -170,6 +170,7 @@ for i, (col, (icon, name, price, feats, featured)) in enumerate(zip(pcols, plans
 
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 
+# ── Footer ─────────────────────────────────────────────────────────────────
 st.markdown(f'''
 <div style="text-align:center;padding:3rem 1rem;border-top:1px solid rgba(255,255,255,0.1);">
     <div style="margin-bottom:1rem;font-weight:700;font-size:1.2rem;">🚀 ContentMultiplier AI</div>
