@@ -18,6 +18,22 @@ if page_param == "app":
 elif page_param == "privacy":
     st.switch_page("pages/02_🔒_Privacy_Policy.py")
 
+# ── SEO meta tags (injected via JS to reach <head>) ─────────────────────────
+OG_SCRIPT = """<script>
+(function() {
+    var d=document;
+    function m(a){var e=d.createElement("meta");for(var k in a)e.setAttribute(k,a[k]);d.head.appendChild(e);}
+    m({"property":"og:title","content":"\u0636\u0627\u0639\u0641 \u0645\u062d\u062a\u0648\u0627\u0643 \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a | ContentMultiplier AI"});
+    m({"property":"og:description","content":"\u0623\u062f\u0627\u0629 \u0645\u0641\u062a\u0648\u062d\u0629 \u0627\u0644\u0645\u0635\u062f\u0631 \u062a\u062d\u0648\u0644 \u0623\u064a \u0645\u0642\u0627\u0644 \u0625\u0644\u0649 \u0645\u0646\u0634\u0648\u0631\u0627\u062a \u0627\u062d\u062a\u0631\u0627\u0641\u064a\u0629 \u0644\u062c\u0645\u064a\u0639 \u0645\u0646\u0635\u0627\u062a \u0627\u0644\u062a\u0648\u0627\u0635\u0644."});
+    m({"property":"og:image","content":"https://opencode.ai/favicon.ico"});
+    m({"property":"og:type","content":"website"});
+    m({"name":"twitter:card","content":"summary_large_image"});
+    m({"name":"twitter:title","content":"\u0636\u0627\u0639\u0641 \u0645\u062d\u062a\u0648\u0627\u0643 \u0628\u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a | ContentMultiplier AI"});
+    m({"name":"twitter:description","content":"\u0623\u062f\u0627\u0629 \u0645\u0641\u062a\u0648\u062d\u0629 \u0627\u0644\u0645\u0635\u062f\u0631 \u062a\u062d\u0648\u0644 \u0623\u064a \u0645\u0642\u0627\u0644 \u0625\u0644\u0649 \u0645\u0646\u0634\u0648\u0631\u0627\u062a \u0627\u062d\u062a\u0631\u0627\u0641\u064a\u0629 \u0644\u062c\u0645\u064a\u0639 \u0645\u0646\u0635\u0627\u062a \u0627\u0644\u062a\u0648\u0627\u0635\u0644."});
+})();
+</script>"""
+st.markdown(OG_SCRIPT, unsafe_allow_html=True)
+
 st.markdown(FONT_CSS, unsafe_allow_html=True)
 inject_custom_css()
 
