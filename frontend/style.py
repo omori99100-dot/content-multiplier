@@ -210,6 +210,7 @@ def inject_custom_css():
             background-clip: text;
         }
         .sub-header { color: rgba(0, 0, 0, 0.5); }
+        .hero-ring { opacity: 0.05 !important; }
         .stMetric { background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.06); }
         .stMetric label { color: #64748B !important; }
         .stMetric [data-testid='stMetricValue'] { color: #1E293B !important; }

@@ -46,6 +46,29 @@ hero_anim = """
         transition: transform 0.2s;
     }
     .btn-pulse:hover { transform: translateY(-3px); }
+    .hero-decoration {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 500px; height: 500px; pointer-events: none; z-index: 0;
+    }
+    .hero-ring {
+        position: absolute; inset: 0; border-radius: 50%;
+        background: conic-gradient(from 0deg, #2563EB, #7C3AED, #60A5FA, #2563EB);
+        opacity: 0.08; animation: spin 20s linear infinite;
+        mask: radial-gradient(circle, transparent 45%, #000 46%, #000 54%, transparent 55%);
+        -webkit-mask: radial-gradient(circle, transparent 45%, #000 46%, #000 54%, transparent 55%);
+    }
+    .hero-dots {
+        position: absolute; inset: 0;
+        background-image: radial-gradient(circle, rgba(96,165,250,0.25) 1.5px, transparent 1.5px);
+        background-size: 30px 30px;
+        animation: drift 30s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes drift {
+        0% { transform: translate(0, 0); }
+        50% { transform: translate(10px, -10px); }
+        100% { transform: translate(0, 0); }
+    }
     .feature-enter { animation: fadeSlideUp 0.6s ease-out both; }
     .feature-enter:nth-child(1) { animation-delay: 0.1s; }
     .feature-enter:nth-child(2) { animation-delay: 0.2s; }
@@ -68,7 +91,9 @@ col1, _, col2 = st.columns([1, 8, 1])
 with col2:
     st.button("🌐 " + ("English" if LANG == "ar" else "العربية"), on_click=switch_lang, use_container_width=True)
 
-st.markdown('<div class="hero-section">', unsafe_allow_html=True)
+st.markdown('<div class="hero-section" style="position:relative;overflow:hidden;">'
+    '<div class="hero-decoration"><div class="hero-ring"></div><div class="hero-dots"></div></div>'
+    '<div style="position:relative;z-index:1;">', unsafe_allow_html=True)
 
 hero_title = ("🚀 ضاعف محتواك لمنصات التواصل<br>في دقائق بالذكاء الاصطناعي" if LANG == "ar"
               else "🚀 Multiply Your Content Across<br>Social Platforms in Minutes")
@@ -94,7 +119,7 @@ for icon, num, label in stats:
 stats_html += '</div>'
 st.markdown(stats_html, unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('</div></div>', unsafe_allow_html=True)
 
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 
