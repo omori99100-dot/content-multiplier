@@ -116,14 +116,14 @@ hero_title = ("🚀 ضاعف محتواك لمنصات التواصل<br>في د
 hero_desc = ("حوّل مقالاً واحداً إلى منشورات مخصصة وجاهزة للنشر على تويتر، لينكدإن، فيسبوك، انستغرام، وتيك توك" if LANG == "ar"
              else "Convert one article into platform-optimized posts for Twitter, LinkedIn, Facebook, Instagram & TikTok")
 
-st.markdown(f'<h1 class="main-header" style="font-size:3rem;">{hero_title}</h1>', unsafe_allow_html=True)
-st.markdown(f'<p class="sub-header" style="font-size:1.2rem;max-width:650px;margin:0 auto 2rem;">{hero_desc}</p>', unsafe_allow_html=True)
+st.markdown(f'<h1 class="main-header">{hero_title}</h1>', unsafe_allow_html=True)
+st.markdown(f'<p class="sub-header" style="max-width:650px;margin:0 auto 2rem;">{hero_desc}</p>', unsafe_allow_html=True)
 
 cta_main = "ابدأ الآن مجاناً" if LANG == "ar" else "Start Free"
 cta_login = "تسجيل الدخول" if LANG == "ar" else "Login"
 st.markdown(f'<div class="hero-actions">'
     f'<a href="?page=app" class="btn-pulse">{cta_main} ✨</a>&nbsp;&nbsp;'
-    f'<a href="?page=app" class="glass-card" style="display:inline-block;padding:1rem 2.5rem;border-radius:60px;text-decoration:none!important;color:#fff!important;font-weight:700;">{cta_login} 🔐</a>'
+    f'<a href="?page=app" class="glass-card" style="display:inline-block;padding:1rem 2.5rem;border-radius:14px;text-decoration:none!important;color:#fff!important;font-weight:700;">{cta_login} 🔐</a>'
     f'</div>', unsafe_allow_html=True)
 
 stats_ar = [("📝", "٥٠+", "قالب"), ("🌍", "5", "منصات"), ("🆓", "7", "أيام تجربة")]
@@ -199,7 +199,6 @@ for i, (col, (icon, name, price, feats, featured)) in enumerate(zip(pcols, plans
             st.markdown(f'<div class="gold-badge" style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:0.3rem 1.5rem;border-radius:20px;font-size:0.85rem;font-weight:700;white-space:nowrap;">{"الأكثر طلباً" if LANG == "ar" else "Most Popular"}</div>', unsafe_allow_html=True)
         st.markdown(f'<div style="font-size:2.5rem;margin-bottom:0.5rem;">{icon}</div>', unsafe_allow_html=True)
         st.markdown(f'<h3 style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">{name}</h3>', unsafe_allow_html=True)
-        st.markdown(f'<div style="font-size:2.5rem;font-weight:800;margin:1rem 0;"><span style="font-size:0.9rem;opacity:0.6;">{"شهر/" if LANG == "ar" else "/mo"}</span></div>'.replace('<span style=','<span style="font-size:1rem;opacity:0.6;" >' if LANG == "ar" else '<span style="font-size:1rem;opacity:0.6;" >', 1), unsafe_allow_html=True)
         st.markdown(f'<div style="font-size:2.5rem;font-weight:800;margin:1rem 0;">{price}<span style="font-size:0.9rem;opacity:0.6;">/{"شهر" if LANG == "ar" else "mo"}</span></div>', unsafe_allow_html=True)
         for f in feats:
             st.markdown(f'<p style="margin:0.5rem 0;">✅ {f}</p>', unsafe_allow_html=True)

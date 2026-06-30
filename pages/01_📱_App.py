@@ -313,12 +313,12 @@ def show_dashboard():
     mcol4.metric("💪 " + ("Plan" if LANG == "en" else "الباقة"), user["subscription"].upper())
 
     ref = get_referral_stats(user["id"])
-    st.markdown(f'<div style="height:1.5rem;"></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="height:2rem;"></div>', unsafe_allow_html=True)
     rcol1, rcol2 = st.columns(2)
     rcol1.metric("👥 " + ("Invited" if LANG == "en" else "المدعوون"), ref.get("count", 0))
     rcol2.metric("🎁 " + ("Bonuses" if LANG == "en" else "المكافآت"), ref.get("bonuses", 0))
 
-    st.markdown(f'<div class="glass-card" style="margin-top:2rem;padding:1.5rem;">', unsafe_allow_html=True)
+    st.markdown(f'<div class="glass-card" style="margin-top:2rem;">', unsafe_allow_html=True)
     st.markdown(f'<h3>📜 {_("generation_history")}</h3>', unsafe_allow_html=True)
     history = get_generation_history(user["id"])
     if history:
@@ -355,7 +355,7 @@ def show_referral():
     mcol1.metric("👥 " + ("People Invited" if LANG == "en" else "عدد المدعوين"), ref.get("count", 0))
     mcol2.metric("🎁 " + ("Bonuses Earned" if LANG == "en" else "المكافآت"), ref.get("bonuses", 0))
 
-    st.markdown(f'<div class="glass-card" style="margin-top:2rem;padding:1.5rem;">', unsafe_allow_html=True)
+    st.markdown(f'<div class="glass-card" style="margin-top:2rem;">', unsafe_allow_html=True)
     st.markdown(f'<h3>💡 {"How it works" if LANG == "en" else "كيف يعمل؟"}</h3>', unsafe_allow_html=True)
     steps = [
         ("1️⃣ " + ("Share your link" if LANG == "en" else "شارك رابطك"),
@@ -413,7 +413,7 @@ def main():
         st.markdown(f'<div style="text-align:center;padding:3rem 1rem;">'
             f'<h1 class="main-header" style="font-size:3rem;">🚀 {_("app_title")}</h1>'
             f'<p class="sub-header" style="font-size:1.1rem;">{_("app_subtitle")}</p>'
-            f'<a href="?page=landing" target="_self" style="display:inline-block;padding:0.9rem 2.5rem;border-radius:60px;text-decoration:none!important;background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff!important;font-weight:700;">{"← Home" if LANG == "en" else "→ الصفحة الرئيسية"}</a>'
+            f'<a href="/" target="_self" style="display:inline-block;padding:0.9rem 2.5rem;border-radius:14px;text-decoration:none!important;background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff!important;font-weight:700;">{"← Home" if LANG == "en" else "→ الصفحة الرئيسية"}</a>'
             f'</div>', unsafe_allow_html=True)
         authcol1, authcol2 = st.columns(2)
         with authcol1:
