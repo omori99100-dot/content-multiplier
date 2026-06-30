@@ -55,8 +55,8 @@ hero_anim = """
     .hero-section .hero-stats { animation: fadeSlideUp 0.8s ease-out 0.4s both; }
     .btn-pulse {
         display: inline-block; padding: 1.2rem 3.5rem;
-        background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
-        color: #fff !important; font-size: 1.3rem; font-weight: 800;
+        background: var(--primary);
+        color: var(--text-light) !important; font-size: 1.3rem; font-weight: 800;
         border-radius: 60px; text-decoration: none !important;
         animation: pulse 2s infinite;
         transition: transform 0.2s;
@@ -68,7 +68,7 @@ hero_anim = """
     }
     .hero-ring {
         position: absolute; inset: 0; border-radius: 50%;
-        background: conic-gradient(from 0deg, #2563EB, #7C3AED, #60A5FA, #2563EB);
+        background: conic-gradient(from 0deg, var(--primary), var(--accent-light), var(--primary-dark), var(--primary));
         opacity: 0.08; animation: spin 20s linear infinite;
         mask: radial-gradient(circle, transparent 45%, #000 46%, #000 54%, transparent 55%);
         -webkit-mask: radial-gradient(circle, transparent 45%, #000 46%, #000 54%, transparent 55%);
@@ -90,13 +90,13 @@ hero_anim = """
     .feature-enter:nth-child(2) { animation-delay: 0.2s; }
     .feature-enter:nth-child(3) { animation-delay: 0.3s; }
     .section-spacer { height: 5rem; }
-    .gold-border { border: 2px solid #F59E0B !important; }
-    .gold-badge { background: linear-gradient(135deg, #F59E0B, #FCD34D); color: #0F172A !important; }
+    .gold-border { border: 2px solid #4f46e5 !important; }
+    .gold-badge { background: #4f46e5; color: #ffffff !important; }
     .avatar-circle {
         width: 64px; height: 64px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         font-size: 2rem; margin: 0 auto 1rem;
-        background: linear-gradient(135deg, #2563EB, #7C3AED);
+        background: var(--primary-gradient);
     }
 </style>
 """
@@ -123,7 +123,7 @@ cta_main = "ابدأ الآن مجاناً" if LANG == "ar" else "Start Free"
 cta_login = "تسجيل الدخول" if LANG == "ar" else "Login"
 st.markdown(f'<div class="hero-actions">'
     f'<a href="?page=app" class="btn-pulse">{cta_main} ✨</a>&nbsp;&nbsp;'
-    f'<a href="?page=app" class="glass-card" style="display:inline-block;padding:1rem 2.5rem;border-radius:14px;text-decoration:none!important;color:#fff!important;font-weight:700;">{cta_login} 🔐</a>'
+    f'<a href="?page=app" class="glass-card" style="display:inline-block;padding:1rem 2.5rem;border-radius:var(--btn-radius);text-decoration:none!important;color:var(--text-light)!important;font-weight:700;">{cta_login} 🔐</a>'
     f'</div>', unsafe_allow_html=True)
 
 stats_ar = [("📝", "٥٠+", "قالب"), ("🌍", "5", "منصات"), ("🆓", "7", "أيام تجربة")]
@@ -167,21 +167,28 @@ for i, (col, (icon, title, desc)) in enumerate(zip(cols, features)):
 
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 
-# ── Pricing section ────────────────────────────────────────────────────────
+# ── SVG pricing icons ────────────────────────────────────────────────────
 pricing_title = "💰 خطط الأسعار" if LANG == "ar" else "💰 Pricing Plans"
 st.markdown(f'<h2 style="text-align:center;font-size:2rem;font-weight:800;margin-bottom:3rem;">{pricing_title}</h2>', unsafe_allow_html=True)
 
-plans = [
-    ("🆓", "مجاني" if LANG == "ar" else "Free", "$0",
+_PRICING_ICONS = {
+    "free": '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    "basic": '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    "pro": '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15l-3-3m0 0l3-3m-3 3H3m12 0h6M4.5 9.5L3 12l1.5 2.5M19.5 9.5L21 12l-1.5 2.5M9 19.5L12 21l3-1.5M9 4.5L12 3l3 1.5"/></svg>',
+}
+
+# ── Pricing section ────────────────────────────────────────────────────────
+_PRICING_PLANS = [
+    ("free", "مجاني" if LANG == "ar" else "Free", "$0",
      ["5 توليدات/يوم" if LANG == "ar" else "5 generations/day",
       "منصات أساسية" if LANG == "ar" else "Basic platforms",
       "نبرة قياسية" if LANG == "ar" else "Standard tone"], False),
-    ("⭐", "أساسي" if LANG == "ar" else "Basic", "$9",
+    ("basic", "أساسي" if LANG == "ar" else "Basic", "$9",
      ["30 توليدة/يوم" if LANG == "ar" else "30 generations/day",
       "جميع المنصات" if LANG == "ar" else "All platforms",
       "جميع النبرات" if LANG == "ar" else "All tones",
       "تصدير PDF" if LANG == "ar" else "PDF export"], True),
-    ("🚀", "احترافي" if LANG == "ar" else "Pro", "$29",
+    ("pro", "احترافي" if LANG == "ar" else "Pro", "$29",
      ["100 توليدة/يوم" if LANG == "ar" else "100 generations/day",
       "جميع المنصات" if LANG == "ar" else "All platforms",
       "جميع النبرات + لهجات" if LANG == "ar" else "All tones + dialects",
@@ -190,23 +197,50 @@ plans = [
 ]
 
 pcols = st.columns(3)
-for i, (col, (icon, name, price, feats, featured)) in enumerate(zip(pcols, plans)):
+for i, (col, (key, name, price, feats, featured)) in enumerate(zip(pcols, _PRICING_PLANS)):
     with col:
         margin = "margin-top:-1rem;" if featured else ""
         border = 'class="glass-card gold-border"' if featured else 'class="glass-card"'
         st.markdown(f'<div {border} style="text-align:center;{margin}position:relative;">', unsafe_allow_html=True)
         if featured:
             st.markdown(f'<div class="gold-badge" style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:0.3rem 1.5rem;border-radius:20px;font-size:0.85rem;font-weight:700;white-space:nowrap;">{"الأكثر طلباً" if LANG == "ar" else "Most Popular"}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div style="font-size:2.5rem;margin-bottom:0.5rem;">{icon}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="margin-bottom:0.5rem;color:var(--text-light);">{_PRICING_ICONS[key]}</div>', unsafe_allow_html=True)
         st.markdown(f'<h3 style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">{name}</h3>', unsafe_allow_html=True)
         st.markdown(f'<div style="font-size:2.5rem;font-weight:800;margin:1rem 0;">{price}<span style="font-size:0.9rem;opacity:0.6;">/{"شهر" if LANG == "ar" else "mo"}</span></div>', unsafe_allow_html=True)
         for f in feats:
-            st.markdown(f'<p style="margin:0.5rem 0;">✅ {f}</p>', unsafe_allow_html=True)
+            st.markdown(f'<p style="margin:0.5rem 0;display:flex;align-items:center;justify-content:center;gap:0.5rem;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg> {f}</p>', unsafe_allow_html=True)
         btn = "ابدأ مجاناً" if LANG == "ar" else "Start Free"
         if name not in ("مجاني" if LANG == "ar" else "Free",):
             btn = f"اشترك {price}/شهر" if LANG == "ar" else f"Subscribe {price}/mo"
-        st.markdown(f'<a href="?page=app" style="display:block;text-align:center;padding:0.9rem;margin-top:1.5rem;border-radius:14px;background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff!important;font-weight:700;text-decoration:none!important;">{btn}</a>', unsafe_allow_html=True)
+        st.markdown(f'<a href="?page=app" style="display:block;text-align:center;padding:var(--btn-padding);margin-top:1.5rem;border-radius:var(--btn-radius);background:var(--primary);color:#ffffff!important;font-weight:600;text-decoration:none!important;">{btn}</a>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
+
+# ── Testimonials section ──────────────────────────────────────────────────────
+testimonials_title = "💬 ماذا يقول المستخدمون؟" if LANG == "ar" else "💬 What Our Users Say"
+st.markdown(f'<h2 style="text-align:center;font-size:2rem;font-weight:800;margin-bottom:3rem;">{testimonials_title}</h2>', unsafe_allow_html=True)
+
+tcols = st.columns(3)
+testimonials = [
+    ("🧑‍💻", "أحمد السالم", "مطور برمجيات" if LANG == "ar" else "Software Developer",
+     "أداة رائعة! وفرت علي ساعات طويلة من إعادة صياغة المحتوى. أدعمها بشدة." if LANG == "ar"
+     else "Amazing tool! Saved me hours of content reformatting. Highly recommend."),
+    ("👩‍💼", "سارة العتيبي", "مسوقة رقمية" if LANG == "ar" else "Digital Marketer",
+     "أسعار مناسبة جداً وجودة ممتازة. أحببت دعم اللهجات العربية المختلفة." if LANG == "ar"
+     else "Very affordable pricing with excellent quality. Love the Arabic dialect support."),
+    ("👨‍🏫", "خالد الحربي", "صانع محتوى" if LANG == "ar" else "Content Creator",
+     "أنتج محتوى لخمس منصات في دقائق. صار عندي وقت إضافي للتركيز على الإبداع." if LANG == "ar"
+     else "Content for 5 platforms in minutes. I now have extra time to focus on creativity."),
+]
+for col, (icon, name, role, quote) in zip(tcols, testimonials):
+    with col:
+        st.markdown(f'<div class="glass-card" style="text-align:center;">'
+            f'<div class="avatar-circle">{icon}</div>'
+            f'<h4 style="font-weight:700;margin-bottom:0.25rem;">{name}</h4>'
+            f'<p style="opacity:0.5;font-size:0.85rem;margin-bottom:1rem;">{role}</p>'
+            f'<p style="opacity:0.8;line-height:1.7;font-style:italic;">"{quote}"</p>'
+            f'</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 

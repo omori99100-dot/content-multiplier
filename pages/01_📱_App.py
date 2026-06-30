@@ -29,6 +29,25 @@ LANG = st.session_state["lang"]
 def _(key):
     return t._(key, LANG)
 
+# ── SVG outline icons ───────────────────────────────────────────────────────
+_SVG = {
+    "lock": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+    "mail": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    "check": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    "image": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+    "rocket": '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15l-3-3m0 0l3-3m-3 3H3m12 0h6M4.5 9.5L3 12l1.5 2.5M19.5 9.5L21 12l-1.5 2.5M9 19.5L12 21l3-1.5M9 4.5L12 3l3 1.5"/></svg>',
+    "edit": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+    "home": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+    "key": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>',
+    "bulb": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>',
+    "globe": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    "zap": '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    "star": '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    "heart": '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+}
+
+DIR = "rtl" if LANG == "ar" else "ltr"
+
 st.markdown(FONT_CSS, unsafe_allow_html=True)
 inject_custom_css()
 
@@ -45,7 +64,7 @@ st.markdown("""
         transition: all 0.2s; font-weight: 500; user-select: none;
     }
     .platform-pill:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); }
-    .platform-pill.active { background: linear-gradient(135deg, #2563EB, #7C3AED); color: #fff; border-color: transparent; }
+    .platform-pill.active { background: var(--primary-gradient); color: var(--text-light); border-color: transparent; }
     .result-card {
         animation: fadeSlideUp 0.5s ease-out both;
         background: rgba(255,255,255,0.06);
@@ -67,7 +86,7 @@ st.markdown("""
         width: 40px; height: 40px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         font-size: 1.2rem; font-weight: 700;
-        background: linear-gradient(135deg, #2563EB, #7C3AED);
+        background: var(--primary-gradient);
         flex-shrink: 0;
     }
     @keyframes fadeSlideUp {
@@ -81,13 +100,18 @@ st.markdown("""
         border: 1px solid rgba(255,255,255,0.1) !important;
     }
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #2563EB, #7C3AED) !important;
+        background: var(--primary-gradient) !important;
         border-color: transparent !important;
     }
     .stTabs [data-baseweb="tab-panel"] { padding-top: 1.5rem; }
     .stMetric { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255,255,255,0.06); }
     .stMetric label { color: rgba(255,255,255,0.6) !important; }
-    .stMetric [data-testid="stMetricValue"] { color: #fff !important; font-weight: 800; }
+    .stMetric [data-testid="stMetricValue"] { color: var(--text-light) !important; font-weight: 800; }
+    .rtl { direction: rtl; text-align: right; }
+    .rtl .icon-right { margin-left: 0.5rem; }
+    .ltr .icon-left { margin-right: 0.5rem; }
+    .auth-feature { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; }
+    .auth-feature svg { flex-shrink: 0; margin-top: 2px; color: var(--primary); }
 </style>
 """, unsafe_allow_html=True)
 
@@ -105,15 +129,15 @@ def check_api_key() -> bool:
         return True
     st.markdown(f'<div style="max-width:600px;margin:4rem auto;">'
         f'<div class="glass-card" style="text-align:center;padding:3rem 2rem;">'
-        f'<div style="font-size:4rem;margin-bottom:1rem;">🔑</div>'
-        f'<h2 style="margin-bottom:1rem;">{"مرحباً بك! 🌟" if LANG == "ar" else "Welcome! 🌟"}</h2>'
+        f'<div style="font-size:3rem;margin-bottom:1rem;color:var(--primary);">{_SVG["key"]}</div>'
+        f'<h2 style="margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;">{_SVG["bulb"]} {"Welcome!" if LANG == "en" else "مرحباً بك!"}</h2>'
         f'<p style="opacity:0.8;line-height:1.7;margin-bottom:2rem;">'
-        f'{"لبدء استخدام الأداة، يرجى إضافة مفتاح OpenAI API في إعدادات التطبيق." if LANG == "ar" else "To start using the tool, please add your OpenAI API key in the app settings."}'
+        f'{"To start using the tool, please add your OpenAI API key in the app settings." if LANG == "en" else "لبدء استخدام الأداة، يرجى إضافة مفتاح OpenAI API في إعدادات التطبيق."}'
         f'</p>'
-        f'<a href="https://platform.openai.com/api-keys" target="_blank" style="display:inline-block;padding:0.9rem 2rem;border-radius:14px;background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff!important;font-weight:700;text-decoration:none!important;">'
-        f'{"🔑 الحصول على مفتاح API" if LANG == "ar" else "🔑 Get API Key"}</a>'
-        f'<p style="margin-top:1.5rem;font-size:0.85rem;opacity:0.5;">'
-        f'{"💡 أضف المفتاح في Streamlit Cloud → Settings → Secrets، أو في ملف .env للتشغيل المحلي." if LANG == "ar" else "💡 Add the key in Streamlit Cloud → Settings → Secrets, or in a .env file for local development."}'
+        f'<a href="https://platform.openai.com/api-keys" target="_blank" style="display:inline-block;padding:0.9rem 2rem;border-radius:var(--btn-radius);background:var(--primary);color:var(--text-light)!important;font-weight:700;text-decoration:none!important;">'
+        f'{_SVG["key"]} {"Get API Key" if LANG == "en" else "الحصول على مفتاح API"}</a>'
+        f'<p style="margin-top:1.5rem;font-size:0.85rem;opacity:0.5;display:flex;align-items:center;justify-content:center;gap:0.4rem;">'
+        f'{_SVG["bulb"]} {"Add it in Streamlit Cloud → Settings → Secrets, or a .env file for local dev." if LANG == "en" else "أضف المفتاح في Streamlit Cloud → Settings → Secrets، أو في ملف .env للتشغيل المحلي."}'
         f'</p>'
         f'</div></div>', unsafe_allow_html=True)
     return False
@@ -124,10 +148,12 @@ def switch_lang():
 
 def show_login():
     ref = st.query_params.get("ref") or st.session_state.get("ref_code")
-    st.markdown(f'<h2 style="text-align:center;">🔐 {_("login_title")}</h2>', unsafe_allow_html=True)
+    st.markdown(f'<h2 style="text-align:center;display:flex;align-items:center;justify-content:center;gap:0.5rem;">{_SVG["lock"]} {_("login_title")}</h2>', unsafe_allow_html=True)
     with st.form("login_form"):
         st.text_input(_("username"), key="login_user")
         st.text_input(_("password"), type="password", key="login_pass")
+        st.markdown(f'<div style="text-align:{("left" if LANG == "en" else "right")};margin-top:-0.5rem;margin-bottom:0.75rem;">'
+            f'<a href="#" style="font-size:0.85rem;opacity:0.7;">{_("forgot_password")}</a></div>', unsafe_allow_html=True)
         if st.form_submit_button(_("login_btn"), type="primary", use_container_width=True):
             user = authenticate_user(st.session_state.login_user, st.session_state.login_pass)
             if user:
@@ -137,8 +163,8 @@ def show_login():
             else:
                 st.error("Invalid username or password")
     st.markdown("---")
-    st.markdown(f'<p style="text-align:center;">{_("no_account")}</p>', unsafe_allow_html=True)
-    if st.button(_("create_account_btn"), use_container_width=True):
+    st.markdown(f'<p style="text-align:center;opacity:0.7;">{_("no_account")}</p>', unsafe_allow_html=True)
+    if st.button(_("create_account_btn"), use_container_width=True, type="secondary"):
         st.session_state["page"] = "register"
         if ref:
             st.session_state["ref_code"] = ref
@@ -146,9 +172,9 @@ def show_login():
 
 def show_register():
     ref = st.session_state.get("ref_code")
-    st.markdown(f'<h2 style="text-align:center;">📝 {_("register_title")}</h2>', unsafe_allow_html=True)
+    st.markdown(f'<h2 style="text-align:center;display:flex;align-items:center;justify-content:center;gap:0.5rem;">{_SVG["edit"]} {_("register_title")}</h2>', unsafe_allow_html=True)
     if ref:
-        st.info("🎉 " + ("You were invited by a friend! Get a free month when you subscribe." if LANG == "en" else "تمت دعوتك من صديق! احصل على شهر مجاني عند الاشتراك."))
+        st.info(_SVG["star"] + " " + ("You were invited by a friend! Get a free month when you subscribe." if LANG == "en" else "تمت دعوتك من صديق! احصل على شهر مجاني عند الاشتراك."))
     with st.form("register_form"):
         st.text_input(_("full_name"), key="reg_name")
         st.text_input(_("username"), key="reg_user")
@@ -166,7 +192,7 @@ def show_register():
                 st.rerun()
             else:
                 st.error(result.get("error", "Registration failed"))
-    if st.button(_("back_to_login"), use_container_width=True):
+    if st.button(_("back_to_login"), use_container_width=True, type="secondary"):
         st.session_state["page"] = "login"; st.rerun()
 
 def show_topbar(user):
@@ -186,7 +212,7 @@ def show_topbar(user):
         </div>
     </div>
     ''', unsafe_allow_html=True)
-    if st.button("🌐", key="lang_topbar", help="English" if LANG == "ar" else "العربية"):
+    if st.button(_SVG["globe"], key="lang_topbar", help="English" if LANG == "ar" else "العربية"):
         st.session_state["lang"] = "en" if LANG == "ar" else "ar"
         st.rerun()
 
@@ -218,7 +244,7 @@ def show_generate():
     st.markdown(f'<div style="margin-bottom:1.5rem;"><div style="display:flex;justify-content:space-between;font-size:0.9rem;opacity:0.7;">'
         f'<span>{_("usage_title")}: {used}/{limit}</span><span>{_("remaining")}: {remaining}</span></div>'
         f'<div style="height:6px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden;">'
-        f'<div style="width:{pct}%;height:100%;border-radius:3px;background:linear-gradient(90deg,#2563EB,#7C3AED);transition:width 0.3s;"></div></div></div>', unsafe_allow_html=True)
+        f'<div style="width:{pct}%;height:100%;border-radius:3px;background:var(--primary-gradient);transition:width 0.3s;"></div></div></div>', unsafe_allow_html=True)
 
     st.markdown(f'<div class="glass-card" style="padding:2rem;">', unsafe_allow_html=True)
     tab1, tab2 = st.tabs([_("generate_from_url"), _("generate_from_text")])
@@ -374,11 +400,11 @@ def show_pricing():
     user = st.session_state["user"]
     show_topbar(user)
     show_nav()
-    st.markdown(f'<h1 class="main-header">💎 {_("choose_plan")}</h1>', unsafe_allow_html=True)
+    st.markdown(f'<h1 class="main-header" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;">{_SVG["star"]} {_("choose_plan")}</h1>', unsafe_allow_html=True)
     plans = [
-        ("free", "🆓", _("free_plan"), "$0", _("free_desc")),
-        ("basic", "⭐", _("basic_plan"), "$9", _("basic_desc")),
-        ("pro", "🚀", _("pro_plan"), "$29", _("pro_desc")),
+        ("free", _SVG["heart"], _("free_plan"), "$0", _("free_desc")),
+        ("basic", _SVG["star"], _("basic_plan"), "$9", _("basic_desc")),
+        ("pro", _SVG["rocket"], _("pro_plan"), "$29", _("pro_desc")),
     ]
     pcols = st.columns(3)
     for col, (key, icon, name, price, desc) in zip(pcols, plans):
@@ -389,15 +415,15 @@ def show_pricing():
             st.markdown(f'<div {border} style="text-align:center;{margin}position:relative;">', unsafe_allow_html=True)
             if featured:
                 st.markdown(f'<div class="gold-badge" style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:0.3rem 1.5rem;border-radius:20px;font-size:0.85rem;font-weight:700;white-space:nowrap;">{"الأكثر طلباً" if LANG == "ar" else "Most Popular"}</div>', unsafe_allow_html=True)
-            st.markdown(f'<div style="font-size:3rem;margin-bottom:0.5rem;">{icon}</div>')
+            st.markdown(f'<div style="margin-bottom:0.5rem;">{icon}</div>', unsafe_allow_html=True)
             st.markdown(f'<h3 style="font-weight:700;font-size:1.3rem;">{name}</h3>')
             st.markdown(f'<div style="font-size:2.5rem;font-weight:800;margin:0.5rem 0;">{price}<span style="font-size:0.9rem;opacity:0.6;">/{"شهر" if LANG == "ar" else "mo"}</span></div>')
             for line in desc.split("\n"):
-                st.markdown(f'<p style="margin:0.3rem 0;">✅ {line}</p>', unsafe_allow_html=True)
+                st.markdown(f'<p style="margin:0.3rem 0;display:flex;align-items:center;justify-content:center;gap:0.4rem;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg> {line}</p>', unsafe_allow_html=True)
             if user["subscription"] == key:
-                st.button(f"✅ {_('active')}", disabled=True, use_container_width=True)
+                st.markdown(f'<div style="text-align:center;padding:0.75rem;margin-top:1.5rem;border-radius:var(--btn-radius);background:rgba(79,126,248,0.15);color:var(--primary);font-weight:600;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:0.4rem;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> {_("active")}</div>', unsafe_allow_html=True)
             elif key != "free":
-                st.markdown(f'<a href="?page=dashboard" style="display:block;text-align:center;padding:0.9rem;margin-top:1.5rem;border-radius:14px;background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff!important;font-weight:700;text-decoration:none!important;">{"Contact us to upgrade" if LANG == "en" else "تواصل معنا للترقية"}</a>', unsafe_allow_html=True)
+                st.markdown(f'<a href="?page=dashboard" style="display:block;text-align:center;padding:0.9rem;margin-top:1.5rem;border-radius:14px;background:var(--primary);color:#ffffff!important;font-weight:600;text-decoration:none!important;">{"Contact us to upgrade" if LANG == "en" else "تواصل معنا للترقية"}</a>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
 def main():
@@ -410,23 +436,41 @@ def main():
         st.session_state["ref_code"] = ref
 
     if st.session_state["user"] is None:
-        st.markdown(f'<div style="text-align:center;padding:3rem 1rem;">'
-            f'<h1 class="main-header" style="font-size:3rem;">🚀 {_("app_title")}</h1>'
-            f'<p class="sub-header" style="font-size:1.1rem;">{_("app_subtitle")}</p>'
-            f'<a href="/" target="_self" style="display:inline-block;padding:0.9rem 2.5rem;border-radius:14px;text-decoration:none!important;background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff!important;font-weight:700;">{"← Home" if LANG == "en" else "→ الصفحة الرئيسية"}</a>'
+        st.markdown(f'<div style="text-align:center;padding:3rem 1rem 0;">'
+            f'<h1 class="main-header" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;">{_SVG["rocket"]} {_("app_title")}</h1>'
+            f'<p class="sub-header">{_("app_subtitle")}</p>'
             f'</div>', unsafe_allow_html=True)
+        if st.button("🏠 " + ("← Home" if LANG == "en" else "→ الصفحة الرئيسية"), type="secondary"):
+            st.switch_page("streamlit_app.py")
+        st.markdown('<div style="height:2rem;"></div>', unsafe_allow_html=True)
         authcol1, authcol2 = st.columns(2)
         with authcol1:
             st.markdown(f'<div class="glass-card">', unsafe_allow_html=True)
-            show_login()
+            if st.session_state.get("page", "login") == "register":
+                show_register()
+            else:
+                show_login()
             st.markdown('</div>', unsafe_allow_html=True)
         with authcol2:
-            st.markdown(f'<div class="glass-card">', unsafe_allow_html=True)
-            st.markdown(f"### {'New here?' if LANG == 'en' else 'جديد هنا؟'}")
-            st.markdown("🚀 " + ("ContentMultiplier AI converts one article into optimized posts for all platforms." if LANG == "en" else "مضاعف المحتوى يحوّل مقالاً واحداً إلى منشورات مخصصة لكل المنصات."))
-            st.markdown("✅ " + ("Support Arabic, English, and dialects" if LANG == "en" else "يدعم العربية والإنجليزية واللهجات"))
-            st.markdown("📧 " + ("Auto-delivery to your email" if LANG == "en" else "توصيل تلقائي لبريدك"))
-            st.markdown("🖼️ " + ("Suggested images for each post" if LANG == "en" else "صور مقترحة لكل منشور"))
+            st.markdown(f'<div class="glass-card" style="height:100%;">', unsafe_allow_html=True)
+            st.markdown(f'<h3 style="text-align:center;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:1.5rem;">{_SVG["zap"]} {"Why ContentMultiplier?" if LANG == "en" else "لماذا مضاعف المحتوى؟"}</h3>', unsafe_allow_html=True)
+            features_col = [
+                ("globe", "Support Arabic, English, and dialects" if LANG == "en" else "يدعم العربية والإنجليزية واللهجات"),
+                ("zap", "One article → optimized posts for all platforms" if LANG == "en" else "مقال واحد → منشورات مخصصة لكل المنصات"),
+                ("mail", "Auto-delivery to your email" if LANG == "en" else "توصيل تلقائي لبريدك"),
+                ("image", "Suggested images for each post" if LANG == "en" else "صور مقترحة لكل منشور"),
+                ("star", "Save 5+ hours every week" if LANG == "en" else "وفر 5+ ساعات كل أسبوع"),
+            ]
+            for icon_key, text in features_col:
+                st.markdown(f'<div class="auth-feature" style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:1rem;">'
+                    f'<span style="flex-shrink:0;color:var(--primary);margin-top:2px;">{_SVG[icon_key]}</span>'
+                    f'<span style="opacity:0.85;line-height:1.5;">{text}</span></div>', unsafe_allow_html=True)
+            st.markdown('<hr style="border-color:rgba(255,255,255,0.06);margin:1.5rem 0;">', unsafe_allow_html=True)
+            st.markdown(f'<div style="text-align:center;padding:0.5rem;border-radius:12px;background:rgba(79,126,248,0.08);border:1px solid rgba(79,126,248,0.15);">'
+                f'<p style="font-style:italic;opacity:0.8;line-height:1.6;margin:0;">'
+                f'&ldquo;{"Amazing tool! Saved me hours of content reformatting." if LANG == "en" else "أداة رائعة! وفرت علي ساعات طويلة من إعادة الصياغة."}&rdquo;</p>'
+                f'<p style="margin:0.5rem 0 0;font-size:0.85rem;opacity:0.5;">— {"Ahmed, Software Developer" if LANG == "en" else "أحمد، مطور برمجيات"}</p>'
+                f'</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
         return
 

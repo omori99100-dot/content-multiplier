@@ -16,7 +16,7 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap');
     * { font-family: 'Tajawal', sans-serif !important; }
-    .hero { text-align: center; padding: 5rem 1rem 3rem; background: linear-gradient(135deg, #0a1628, #1a3a6a); color: white; border-radius: 0 0 40px 40px; margin: -5rem -1rem 2rem; }
+    .hero { text-align: center; padding: 5rem 1rem 3rem; background: var(--bg-dark); color: white; border-radius: 0 0 40px 40px; margin: -5rem -1rem 2rem; }
     .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.3; }
     .hero p { font-size: 1.2rem; opacity: 0.85; max-width: 600px; margin: 0 auto 2rem; }
     .hero .btn-primary { display: inline-block; padding: 1rem 3rem; background: #00d4aa; color: #0a1628; font-size: 1.2rem; font-weight: 700; border-radius: 50px; text-decoration: none; transition: 0.3s; }

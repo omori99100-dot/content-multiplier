@@ -18,8 +18,8 @@ LANGUAGES = {
         "generate_tab": "Generate",
         "dashboard_tab": "Dashboard",
         "upgrade_tab": "Upgrade",
-        "generate_from_url": "Generate from URL",
-        "generate_from_text": "Generate from Text",
+        "generate_from_url": "Article URL",
+        "generate_from_text": "Direct Text",
         "url_placeholder": "Paste article URL",
         "text_placeholder": "Paste your article text here...",
         "tone_label": "Tone",
@@ -63,6 +63,7 @@ LANGUAGES = {
         "plan_label": "Plan",
         "language_label": "Language",
         "welcome": "Welcome",
+        "forgot_password": "Forgot password?",
     },
     "ar": {
         "app_title": "مضاعف المحتوى بالذكاء الاصطناعي",
@@ -83,8 +84,8 @@ LANGUAGES = {
         "generate_tab": "توليد",
         "dashboard_tab": "لوحة التحكم",
         "upgrade_tab": "ترقية",
-        "generate_from_url": "توليد من رابط",
-        "generate_from_text": "توليد من نص",
+        "generate_from_url": "رابط مقال",
+        "generate_from_text": "نص مباشر",
         "url_placeholder": "الصق رابط المقال",
         "text_placeholder": "الصق نص المقال هنا...",
         "tone_label": "النبرة",
@@ -128,6 +129,7 @@ LANGUAGES = {
         "plan_label": "الباقة",
         "language_label": "اللغة",
         "welcome": "مرحباً",
+        "forgot_password": "نسيت كلمة المرور؟",
     },
 }
 
