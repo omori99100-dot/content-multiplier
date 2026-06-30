@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from frontend.fonts import FONT_CSS
 from frontend.style import inject_custom_css
@@ -89,6 +90,33 @@ st.markdown("""
     .stMetric [data-testid="stMetricValue"] { color: #fff !important; font-weight: 800; }
 </style>
 """, unsafe_allow_html=True)
+
+def check_api_key() -> bool:
+    key = os.environ.get("OPENAI_API_KEY")
+    if not key:
+        try:
+            key = st.secrets.get("OPENAI_API_KEY")
+        except (AttributeError, KeyError, TypeError):
+            try:
+                key = st.secrets["OPENAI_API_KEY"]
+            except (KeyError, TypeError):
+                pass
+    if key:
+        return True
+    st.markdown(f'<div style="max-width:600px;margin:4rem auto;">'
+        f'<div class="glass-card" style="text-align:center;padding:3rem 2rem;">'
+        f'<div style="font-size:4rem;margin-bottom:1rem;">🔑</div>'
+        f'<h2 style="margin-bottom:1rem;">{"مرحباً بك! 🌟" if LANG == "ar" else "Welcome! 🌟"}</h2>'
+        f'<p style="opacity:0.8;line-height:1.7;margin-bottom:2rem;">'
+        f'{"لبدء استخدام الأداة، يرجى إضافة مفتاح OpenAI API في إعدادات التطبيق." if LANG == "ar" else "To start using the tool, please add your OpenAI API key in the app settings."}'
+        f'</p>'
+        f'<a href="https://platform.openai.com/api-keys" target="_blank" style="display:inline-block;padding:0.9rem 2rem;border-radius:14px;background:linear-gradient(135deg,#2563EB,#7C3AED);color:#fff!important;font-weight:700;text-decoration:none!important;">'
+        f'{"🔑 الحصول على مفتاح API" if LANG == "ar" else "🔑 Get API Key"}</a>'
+        f'<p style="margin-top:1.5rem;font-size:0.85rem;opacity:0.5;">'
+        f'{"💡 أضف المفتاح في Streamlit Cloud → Settings → Secrets، أو في ملف .env للتشغيل المحلي." if LANG == "ar" else "💡 Add the key in Streamlit Cloud → Settings → Secrets, or in a .env file for local development."}'
+        f'</p>'
+        f'</div></div>', unsafe_allow_html=True)
+    return False
 
 def switch_lang():
     st.session_state["lang"] = "en" if LANG == "ar" else "ar"
@@ -400,7 +428,12 @@ def main():
             st.markdown("📧 " + ("Auto-delivery to your email" if LANG == "en" else "توصيل تلقائي لبريدك"))
             st.markdown("🖼️ " + ("Suggested images for each post" if LANG == "en" else "صور مقترحة لكل منشور"))
             st.markdown('</div>', unsafe_allow_html=True)
-    elif st.session_state["page"] == "dashboard": show_dashboard()
+        return
+
+    if st.session_state["page"] in ("generate", "home") and not check_api_key():
+        return
+
+    if st.session_state["page"] == "dashboard": show_dashboard()
     elif st.session_state["page"] == "pricing": show_pricing()
     elif st.session_state["page"] == "referral": show_referral()
     else: show_generate()
