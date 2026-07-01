@@ -9,8 +9,10 @@ BASE_URL = os.getenv("BASE_URL", "http://localhost:8501")
 st.set_page_config(page_title="ContentMultiplier AI", page_icon="🚀", layout="wide", initial_sidebar_state="collapsed")
 
 for k in ("user", "page", "results", "ref_code"):
-    st.session_state.setdefault(k, None if k != "page" else "home")
-st.session_state.setdefault("lang", "ar")
+    if k not in st.session_state:
+        st.session_state[k] = None if k != "page" else "home"
+if "lang" not in st.session_state:
+    st.session_state["lang"] = "ar"
 
 LANG = st.session_state["lang"]
 DIR = "rtl" if LANG == "ar" else "ltr"
