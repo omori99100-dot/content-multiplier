@@ -6,9 +6,11 @@ def inject_custom_css():
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap');
 
     :root {
-        --primary: #4f7ef8;
-        --primary-dark: #3a6ae8;
-        --primary-gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        --primary-start: #3b82f6;
+        --primary-end: #8b5cf6;
+        --primary-gradient: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+        --primary: var(--primary-start);
+        --primary-dark: #2563eb;
         --accent-light: #7aa2f8;
         --bg-dark-1: #0F172A;
         --bg-dark-2: #1a2a4a;
@@ -30,14 +32,15 @@ def inject_custom_css():
         --input-border: rgba(255, 255, 255, 0.15);
         --input-bg-light: #FFFFFF;
         --input-border-light: #CBD5E1;
-        --glass-bg: rgba(255, 255, 255, 0.06);
+        --bg-glass: rgba(255, 255, 255, 0.05);
+        --glass-bg: var(--bg-glass);
         --glass-border: rgba(255, 255, 255, 0.1);
         --glass-bg-light: rgba(255, 255, 255, 0.85);
         --glass-border-light: rgba(255, 255, 255, 0.9);
         --card-radius: 16px;
         --card-padding: 1.5rem;
         --btn-padding: 0.75rem 2rem;
-        --btn-radius: 12px;
+        --btn-radius: 10px;
         --input-padding: 0.75rem 1rem;
         --input-radius: 12px;
         --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -71,15 +74,15 @@ def inject_custom_css():
         100% { opacity: 1; transform: translateY(0); }
     }
     @keyframes pulse {
-        0%, 100% { box-shadow: 0 4px 15px rgba(79, 126, 248, 0.3); }
-        50% { box-shadow: 0 4px 30px rgba(79, 126, 248, 0.6); }
+        0%, 100% { box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        50% { box-shadow: 0 4px 30px rgba(59, 130, 246, 0.6); }
     }
 
     .glass-card {
         animation: fadeIn 0.6s ease-out both;
-        background: var(--glass-bg);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        background: var(--bg-glass);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border: 1px solid var(--glass-border);
         border-radius: var(--card-radius);
         padding: var(--card-padding);
@@ -105,23 +108,22 @@ def inject_custom_css():
         padding: var(--btn-padding) !important;
         border: none !important;
         border-radius: var(--btn-radius) !important;
-        background: var(--primary) !important;
+        background: var(--primary-gradient) !important;
         color: var(--text-light) !important;
-        box-shadow: 0 4px 15px rgba(79, 126, 248, 0.25),
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25),
                     inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-        transition: all 0.2s !important;
+        transition: all 0.3s !important;
         cursor: pointer !important;
     }
 
     .stButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 25px rgba(79, 126, 248, 0.35),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-        background: var(--primary-dark) !important;
+        transform: scale(1.03) !important;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.4) !important;
+        filter: brightness(1.1) !important;
     }
 
     .stButton > button:active {
-        transform: translateY(0) !important;
+        transform: scale(1) !important;
     }
 
     .stButton > button[kind="primary"] {
@@ -216,8 +218,21 @@ def inject_custom_css():
         font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem;
     }
 
-    .gold-border { border: 2px solid #4f46e5 !important; }
-    .gold-badge { background: #4f46e5; color: #ffffff !important; }
+    .popular-badge {
+        background: #8b5cf6;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        text-align: center;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .glass-card.popular {
+        border: 2px solid #8b5cf6;
+        transform: scale(1.05);
+    }
 
     @media (prefers-color-scheme: light) {
         .stApp { background: var(--bg-light); }

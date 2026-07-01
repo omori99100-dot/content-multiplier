@@ -401,30 +401,33 @@ def show_pricing():
     show_topbar(user)
     show_nav()
     st.markdown(f'<h1 class="main-header" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;">{_SVG["star"]} {_("choose_plan")}</h1>', unsafe_allow_html=True)
+
+    def render_pricing_plan(title, price, features, is_popular=False):
+        badge = f'<div class="popular-badge">{"الأكثر طلباً" if LANG == "ar" else "Most Popular"}</div>' if is_popular else ''
+        features_html = "".join([f'<li style="margin-bottom:10px;display:flex;align-items:center;gap:0.5rem;">✅ {f}</li>' for f in features])
+        st.markdown(f"""
+        <div class="glass-card{" popular" if is_popular else ""}" style="text-align:center;">
+            {badge}
+            <h3 style="text-align:center;font-weight:700;">{title}</h3>
+            <h2 style="text-align:center;font-size:2.5rem;font-weight:800;margin:0.5rem 0;">{price}<span style="font-size:0.9rem;opacity:0.6;">/{"شهر" if LANG == "ar" else "mo"}</span></h2>
+            <ul style="list-style:none;padding:0;margin-top:20px;">{features_html}</ul>
+        </div>
+        """, unsafe_allow_html=True)
+
     plans = [
-        ("free", _SVG["heart"], _("free_plan"), "$0", _("free_desc")),
-        ("basic", _SVG["star"], _("basic_plan"), "$9", _("basic_desc")),
-        ("pro", _SVG["rocket"], _("pro_plan"), "$29", _("pro_desc")),
+        ("free", _("free_plan"), "$0", _("free_desc")),
+        ("basic", _("basic_plan"), "$9", _("basic_desc")),
+        ("pro", _("pro_plan"), "$29", _("pro_desc")),
     ]
     pcols = st.columns(3)
-    for col, (key, icon, name, price, desc) in zip(pcols, plans):
+    for col, (key, name, price, desc) in zip(pcols, plans):
         with col:
             featured = key == "basic"
-            margin = "margin-top:-1rem;" if featured else ""
-            border = 'class="glass-card gold-border"' if featured else 'class="glass-card"'
-            st.markdown(f'<div {border} style="text-align:center;{margin}position:relative;">', unsafe_allow_html=True)
-            if featured:
-                st.markdown(f'<div class="gold-badge" style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:0.3rem 1.5rem;border-radius:20px;font-size:0.85rem;font-weight:700;white-space:nowrap;">{"الأكثر طلباً" if LANG == "ar" else "Most Popular"}</div>', unsafe_allow_html=True)
-            st.markdown(f'<div style="margin-bottom:0.5rem;">{icon}</div>', unsafe_allow_html=True)
-            st.markdown(f'<h3 style="font-weight:700;font-size:1.3rem;">{name}</h3>')
-            st.markdown(f'<div style="font-size:2.5rem;font-weight:800;margin:0.5rem 0;">{price}<span style="font-size:0.9rem;opacity:0.6;">/{"شهر" if LANG == "ar" else "mo"}</span></div>')
-            for line in desc.split("\n"):
-                st.markdown(f'<p style="margin:0.3rem 0;display:flex;align-items:center;justify-content:center;gap:0.4rem;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg> {line}</p>', unsafe_allow_html=True)
+            render_pricing_plan(name, price, desc.split("\n"), featured)
             if user["subscription"] == key:
-                st.markdown(f'<div style="text-align:center;padding:0.75rem;margin-top:1.5rem;border-radius:var(--btn-radius);background:rgba(79,126,248,0.15);color:var(--primary);font-weight:600;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:0.4rem;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> {_("active")}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="text-align:center;padding:0.75rem;margin-top:1.5rem;border-radius:var(--btn-radius);background:rgba(79,126,248,0.15);color:var(--primary);font-weight:600;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:0.4rem;">{_SVG["check"]} {_("active")}</div>', unsafe_allow_html=True)
             elif key != "free":
                 st.markdown(f'<a href="?page=dashboard" style="display:block;text-align:center;padding:0.9rem;margin-top:1.5rem;border-radius:14px;background:var(--primary);color:#ffffff!important;font-weight:600;text-decoration:none!important;">{"Contact us to upgrade" if LANG == "en" else "تواصل معنا للترقية"}</a>', unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
 
 def main():
     checkout = st.query_params.get("checkout")

@@ -90,8 +90,6 @@ hero_anim = """
     .feature-enter:nth-child(2) { animation-delay: 0.2s; }
     .feature-enter:nth-child(3) { animation-delay: 0.3s; }
     .section-spacer { height: 5rem; }
-    .gold-border { border: 2px solid #4f46e5 !important; }
-    .gold-badge { background: #4f46e5; color: #ffffff !important; }
     .avatar-circle {
         width: 64px; height: 64px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
@@ -167,53 +165,51 @@ for i, (col, (icon, title, desc)) in enumerate(zip(cols, features)):
 
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 
-# ── SVG pricing icons ────────────────────────────────────────────────────
-pricing_title = "💰 خطط الأسعار" if LANG == "ar" else "💰 Pricing Plans"
+# ── Pricing section ────────────────────────────────────────────────────────
+def render_pricing_plan(title, price, features, is_popular=False, btn_label=None):
+    badge = f'<div class="popular-badge">{"الأكثر طلباً" if LANG == "ar" else "Most Popular"}</div>' if is_popular else ''
+    features_html = "".join([f'<li style="margin-bottom:10px;display:flex;align-items:center;gap:0.5rem;">✅ {f}</li>' for f in features])
+    st.markdown(f"""
+    <div class="glass-card{" popular" if is_popular else ""}" style="text-align:center;">
+        {badge}
+        <h3 style="text-align:center;font-weight:700;">{title}</h3>
+        <h2 style="text-align:center;font-size:2.5rem;font-weight:800;margin:0.5rem 0;">{price}<span style="font-size:0.9rem;opacity:0.6;">/{"شهر" if LANG == "ar" else "mo"}</span></h2>
+        <ul style="list-style:none;padding:0;margin-top:20px;">{features_html}</ul>
+    </div>
+    """, unsafe_allow_html=True)
+    if btn_label:
+        if st.button(btn_label, key=f"pricing_{title}", use_container_width=True):
+            st.switch_page("pages/01_📱_App.py")
+
+pricing_title = "💰 " + ("خطط الأسعار" if LANG == "ar" else "Pricing Plans")
 st.markdown(f'<h2 style="text-align:center;font-size:2rem;font-weight:800;margin-bottom:3rem;">{pricing_title}</h2>', unsafe_allow_html=True)
 
-_PRICING_ICONS = {
-    "free": '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
-    "basic": '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-    "pro": '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15l-3-3m0 0l3-3m-3 3H3m12 0h6M4.5 9.5L3 12l1.5 2.5M19.5 9.5L21 12l-1.5 2.5M9 19.5L12 21l3-1.5M9 4.5L12 3l3 1.5"/></svg>',
-}
-
-# ── Pricing section ────────────────────────────────────────────────────────
-_PRICING_PLANS = [
-    ("free", "مجاني" if LANG == "ar" else "Free", "$0",
-     ["5 توليدات/يوم" if LANG == "ar" else "5 generations/day",
-      "منصات أساسية" if LANG == "ar" else "Basic platforms",
-      "نبرة قياسية" if LANG == "ar" else "Standard tone"], False),
-    ("basic", "أساسي" if LANG == "ar" else "Basic", "$9",
-     ["30 توليدة/يوم" if LANG == "ar" else "30 generations/day",
-      "جميع المنصات" if LANG == "ar" else "All platforms",
-      "جميع النبرات" if LANG == "ar" else "All tones",
-      "تصدير PDF" if LANG == "ar" else "PDF export"], True),
-    ("pro", "احترافي" if LANG == "ar" else "Pro", "$29",
-     ["100 توليدة/يوم" if LANG == "ar" else "100 generations/day",
-      "جميع المنصات" if LANG == "ar" else "All platforms",
-      "جميع النبرات + لهجات" if LANG == "ar" else "All tones + dialects",
-      "تصدير PDF" if LANG == "ar" else "PDF export",
-      "دعم أولوية" if LANG == "ar" else "Priority support"], False),
-]
+FREE = "مجاني" if LANG == "ar" else "Free"
+BASIC = "أساسي" if LANG == "ar" else "Basic"
+PRO = "احترافي" if LANG == "ar" else "Pro"
 
 pcols = st.columns(3)
-for i, (col, (key, name, price, feats, featured)) in enumerate(zip(pcols, _PRICING_PLANS)):
-    with col:
-        margin = "margin-top:-1rem;" if featured else ""
-        border = 'class="glass-card gold-border"' if featured else 'class="glass-card"'
-        st.markdown(f'<div {border} style="text-align:center;{margin}position:relative;">', unsafe_allow_html=True)
-        if featured:
-            st.markdown(f'<div class="gold-badge" style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:0.3rem 1.5rem;border-radius:20px;font-size:0.85rem;font-weight:700;white-space:nowrap;">{"الأكثر طلباً" if LANG == "ar" else "Most Popular"}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div style="margin-bottom:0.5rem;color:var(--text-light);">{_PRICING_ICONS[key]}</div>', unsafe_allow_html=True)
-        st.markdown(f'<h3 style="font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;">{name}</h3>', unsafe_allow_html=True)
-        st.markdown(f'<div style="font-size:2.5rem;font-weight:800;margin:1rem 0;">{price}<span style="font-size:0.9rem;opacity:0.6;">/{"شهر" if LANG == "ar" else "mo"}</span></div>', unsafe_allow_html=True)
-        for f in feats:
-            st.markdown(f'<p style="margin:0.5rem 0;display:flex;align-items:center;justify-content:center;gap:0.5rem;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg> {f}</p>', unsafe_allow_html=True)
-        btn = "ابدأ مجاناً" if LANG == "ar" else "Start Free"
-        if name not in ("مجاني" if LANG == "ar" else "Free",):
-            btn = f"اشترك {price}/شهر" if LANG == "ar" else f"Subscribe {price}/mo"
-        st.markdown(f'<a href="?page=app" style="display:block;text-align:center;padding:var(--btn-padding);margin-top:1.5rem;border-radius:var(--btn-radius);background:var(--primary);color:#ffffff!important;font-weight:600;text-decoration:none!important;">{btn}</a>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+with pcols[0]:
+    render_pricing_plan(FREE, "$0", [
+        "5 " + ("توليدات/يوم" if LANG == "ar" else "generations/day"),
+        ("منصات أساسية" if LANG == "ar" else "Basic platforms"),
+        ("نبرة قياسية" if LANG == "ar" else "Standard tone"),
+    ], btn_label=("ابدأ مجاناً" if LANG == "ar" else "Start Free"))
+with pcols[1]:
+    render_pricing_plan(BASIC, "$9", [
+        "30 " + ("توليدة/يوم" if LANG == "ar" else "generations/day"),
+        ("جميع المنصات" if LANG == "ar" else "All platforms"),
+        ("جميع النبرات" if LANG == "ar" else "All tones"),
+        ("تصدير PDF" if LANG == "ar" else "PDF export"),
+    ], is_popular=True, btn_label=("اشترك $9/شهر" if LANG == "ar" else "Subscribe $9/mo"))
+with pcols[2]:
+    render_pricing_plan(PRO, "$29", [
+        "100 " + ("توليدة/يوم" if LANG == "ar" else "generations/day"),
+        ("جميع المنصات" if LANG == "ar" else "All platforms"),
+        ("جميع النبرات + لهجات" if LANG == "ar" else "All tones + dialects"),
+        ("تصدير PDF" if LANG == "ar" else "PDF export"),
+        ("دعم أولوية" if LANG == "ar" else "Priority support"),
+    ], btn_label=("اشترك $29/شهر" if LANG == "ar" else "Subscribe $29/mo"))
 
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 
