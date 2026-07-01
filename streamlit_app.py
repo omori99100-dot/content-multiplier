@@ -4,7 +4,7 @@ from frontend.style import inject_custom_css
 
 # Page configuration — must be first Streamlit command
 st.set_page_config(
-    page_title="ContentMultiplier AI - ضاعف محتواك",
+    page_title="ContentMultiplier AI",
     page_icon="🚀",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -166,50 +166,43 @@ for i, (col, (icon, title, desc)) in enumerate(zip(cols, features)):
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 
 # ── Pricing section ────────────────────────────────────────────────────────
-def render_pricing_plan(title, price, features, is_popular=False, btn_label=None):
-    badge = f'<div class="popular-badge">{"الأكثر طلباً" if LANG == "ar" else "Most Popular"}</div>' if is_popular else ''
-    features_html = "".join([f'<li style="margin-bottom:10px;display:flex;align-items:center;gap:0.5rem;">✅ {f}</li>' for f in features])
-    st.markdown(f"""
-    <div class="glass-card{" popular" if is_popular else ""}" style="text-align:center;">
-        {badge}
-        <h3 style="text-align:center;font-weight:700;">{title}</h3>
-        <h2 style="text-align:center;font-size:2.5rem;font-weight:800;margin:0.5rem 0;">{price}<span style="font-size:0.9rem;opacity:0.6;">/{"شهر" if LANG == "ar" else "mo"}</span></h2>
-        <ul style="list-style:none;padding:0;margin-top:20px;">{features_html}</ul>
-    </div>
-    """, unsafe_allow_html=True)
-    if btn_label:
-        if st.button(btn_label, key=f"pricing_{title}", use_container_width=True):
-            st.switch_page("pages/01_📱_App.py")
-
 pricing_title = "💰 " + ("خطط الأسعار" if LANG == "ar" else "Pricing Plans")
 st.markdown(f'<h2 style="text-align:center;font-size:2rem;font-weight:800;margin-bottom:3rem;">{pricing_title}</h2>', unsafe_allow_html=True)
 
-FREE = "مجاني" if LANG == "ar" else "Free"
-BASIC = "أساسي" if LANG == "ar" else "Basic"
-PRO = "احترافي" if LANG == "ar" else "Pro"
+_PRICING_PLANS = [
+    ("مجاني" if LANG == "ar" else "Free", "$0",
+     ["5 " + ("توليدات/يوم" if LANG == "ar" else "generations/day"),
+      ("منصات أساسية" if LANG == "ar" else "Basic platforms"),
+      ("نبرة قياسية" if LANG == "ar" else "Standard tone")], False),
+    ("أساسي" if LANG == "ar" else "Basic", "$9",
+     ["30 " + ("توليدة/يوم" if LANG == "ar" else "generations/day"),
+      ("جميع المنصات" if LANG == "ar" else "All platforms"),
+      ("جميع النبرات" if LANG == "ar" else "All tones"),
+      ("تصدير PDF" if LANG == "ar" else "PDF export")], True),
+    ("احترافي" if LANG == "ar" else "Pro", "$29",
+     ["100 " + ("توليدة/يوم" if LANG == "ar" else "generations/day"),
+      ("جميع المنصات" if LANG == "ar" else "All platforms"),
+      ("جميع النبرات + لهجات" if LANG == "ar" else "All tones + dialects"),
+      ("تصدير PDF" if LANG == "ar" else "PDF export"),
+      ("دعم أولوية" if LANG == "ar" else "Priority support")], False),
+]
 
 pcols = st.columns(3)
-with pcols[0]:
-    render_pricing_plan(FREE, "$0", [
-        "5 " + ("توليدات/يوم" if LANG == "ar" else "generations/day"),
-        ("منصات أساسية" if LANG == "ar" else "Basic platforms"),
-        ("نبرة قياسية" if LANG == "ar" else "Standard tone"),
-    ], btn_label=("ابدأ مجاناً" if LANG == "ar" else "Start Free"))
-with pcols[1]:
-    render_pricing_plan(BASIC, "$9", [
-        "30 " + ("توليدة/يوم" if LANG == "ar" else "generations/day"),
-        ("جميع المنصات" if LANG == "ar" else "All platforms"),
-        ("جميع النبرات" if LANG == "ar" else "All tones"),
-        ("تصدير PDF" if LANG == "ar" else "PDF export"),
-    ], is_popular=True, btn_label=("اشترك $9/شهر" if LANG == "ar" else "Subscribe $9/mo"))
-with pcols[2]:
-    render_pricing_plan(PRO, "$29", [
-        "100 " + ("توليدة/يوم" if LANG == "ar" else "generations/day"),
-        ("جميع المنصات" if LANG == "ar" else "All platforms"),
-        ("جميع النبرات + لهجات" if LANG == "ar" else "All tones + dialects"),
-        ("تصدير PDF" if LANG == "ar" else "PDF export"),
-        ("دعم أولوية" if LANG == "ar" else "Priority support"),
-    ], btn_label=("اشترك $29/شهر" if LANG == "ar" else "Subscribe $29/mo"))
+i = 0
+for col in pcols:
+    name, price, feats, featured = _PRICING_PLANS[i]
+    i += 1
+    with col:
+        popular = ' popular' if featured else ''
+        badge = f'<div class="popular-badge">{"الأكثر طلباً" if LANG == "ar" else "Most Popular"}</div>' if featured else ''
+        feats_html = "".join([f'<li style="margin-bottom:10px;">✅ {f}</li>' for f in feats])
+        btn = ("ابدأ مجاناً" if LANG == "ar" else "Start Free") if i == 1 else (f"اشترك {price}/شهر" if LANG == "ar" else f"Subscribe {price}/mo")
+        st.markdown(f'<div class="glass-card{popular}" style="text-align:center;">{badge}'
+            f'<h3 style="font-weight:700;">{name}</h3>'
+            f'<div style="font-size:2.5rem;font-weight:800;margin:0.5rem 0;">{price}<span style="font-size:0.9rem;opacity:0.6;">/{"شهر" if LANG == "ar" else "mo"}</span></div>'
+            f'<ul style="list-style:none;padding:0;">{feats_html}</ul>'
+            f'<a href="?page=app" style="display:block;text-align:center;padding:0.75rem;margin-top:1.5rem;border-radius:var(--btn-radius);background:var(--primary-gradient);color:#fff!important;font-weight:600;text-decoration:none!important;">{btn}</a>'
+            f'</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
 
